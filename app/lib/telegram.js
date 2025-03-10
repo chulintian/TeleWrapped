@@ -1,19 +1,20 @@
-import { message } from "telegram/client";
-
 const { Api, TelegramClient } = require("telegram");
 const { StringSession } = require("telegram/sessions");
 
 const apiId = Number(process.env.TELEGRAM_API_ID);
 const apiHash = process.env.TELEGRAM_API_HASH;
 
-const session = new StringSession("");
-const client = new TelegramClient(session, apiId, apiHash, {});
+function createClient(sessionString) {
+    return new TelegramClient(new StringSession(sessionString), apiId, apiHash, {});
+}
 
 export async function getCode(phoneNum) {
+    const client = createClient("");
+
     await client.connect();
 
     try {
-        await client.invoke(
+        const result = await client.invoke(
             new Api.auth.SendCode({
                 phoneNumber: phoneNum,
                 apiId: apiId,
@@ -21,10 +22,44 @@ export async function getCode(phoneNum) {
                 settings: new Api.CodeSettings({}),
             })
         );
-        client.session.save();
-        return { code: 200, message: "Success" };
         
+        const sessionString = client.session.save();
+
+        return { 
+            code: 200, 
+            content: {
+                session: sessionString,
+                phoneCodeHash: result.phoneCodeHash
+            }
+        };
     } catch (error) {
-        return { code: error.code, message: error.message };
+        return { code: error.code, content: { error: error.message } };
+    }
+}
+
+export async function signIn(session, phoneNum, phoneCodeHash, code) {
+    const client = createClient(session);
+
+    await client.connect();
+
+    try {
+        await client.invoke(
+            new Api.auth.SignIn({
+                phoneNumber: phoneNum,
+                phoneCodeHash: phoneCodeHash,
+                phoneCode: code,
+            })
+        );
+
+        const sessionString = client.session.save();
+
+        return { 
+            code: 200, 
+            content: {
+                session: sessionString
+            }
+        };
+    } catch (error) {
+        return { code: error.code, content: { error: error.errorMessage } };
     }
 }
