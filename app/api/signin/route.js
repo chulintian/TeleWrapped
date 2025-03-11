@@ -3,8 +3,6 @@ import { signIn } from "../../lib/telegram"
 export async function POST(request) {
     const body = await request.json();
     const { sessionObj, phoneNum, phoneCodeHash, code } = body;
-    console.log(sessionObj)
-    console.log(typeof sessionObj)
     const result = await signIn(sessionObj, phoneNum, phoneCodeHash, code);
 
     return new Response(JSON.stringify(result.content), {
