@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "next": "15.2.1",
+    "openai": "^4.87.3",
+    "p-limit": "^6.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "telegram": "^2.26.22"

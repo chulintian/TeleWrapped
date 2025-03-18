@@ -1,5 +1,7 @@
 const { Api, TelegramClient } = require("telegram");
 const { StringSession } = require("telegram/sessions");
+import { getAnalysis } from "./openai"
+import pLimit from 'p-limit';
 
 const apiId = Number(process.env.TELEGRAM_API_ID);
 const apiHash = process.env.TELEGRAM_API_HASH;
@@ -86,7 +88,6 @@ async function getChat(client, chatId){
         );
         return result;
     } catch (error){
-        console.log(error);
         return {};
     }
 }
@@ -103,7 +104,7 @@ async function getChatIds(client){
                 offsetDate: 0,
                 offsetId: 0,
                 offsetPeer: "me",
-                limit: 30,
+                limit: 2,
                 hash: BigInt("-4156887774564"),
                 excludePinned: false,
                 folderId: 0,
@@ -113,21 +114,25 @@ async function getChatIds(client){
         var count = 0;
 
         for (const chat of result.dialogs) {
-            if (count == 10) {
+            if (count == 2) {
                 break;
             }
 
             if (chat.peer.className === "PeerUser") {
                 if (chat.peer.userId.value !== currUserId && chat.peer.userId.value !== BigInt("777000").valueOf()) {
                     const user = await getUser(client, chat.peer.userId);
+                    const { firstName, lastName, username } = user.users[0]
+
+                    console.log(user);
                 
                     const chatInfo = {
                         type: "user",
                         id: chat.peer.userId,
                         info: {
-                            firstName: user.users[0].firstName,
-                            lastName: user.users[0].lastName,
-                            username: user.users[0].username,
+                            firstName: firstName,
+                            lastName: lastName,
+                            username: username,
+                            topMessageId: chat.topMessage,
                         }
                     }
                     chatIdList.push(chatInfo);
@@ -135,11 +140,13 @@ async function getChatIds(client){
                 }
             } else if (chat.peer.className === "PeerChat") {
                 const group = await getChat(client, chat.peer.chatId);
+                console.log(group);
                 const chatInfo = {
                     type: "chat",
                     id: chat.peer.chatId,
                     info: {
                         title: group.chats[0].title,
+                        topMessageId: chat.topMessage,
                     }
                 }
                 chatIdList.push(chatInfo);
@@ -170,6 +177,62 @@ export async function getChatInfos(session) {
             }
         };
     } catch (error) {
+        return { code: error.code, content: { error: error.errorMessage } };
+    }
+}
+
+async function getMessages(client, chatId, offsetId) {
+    try {
+        const result = await client.invoke(
+            new Api.messages.GetHistory({
+                peer: chatId,
+                offsetId: offsetId,
+                offsetDate: 0,
+                addOffset: 0,
+                limit: 100,
+                maxId: 0,
+                minId: 0,
+                hash: BigInt("-4156887774564"),
+            })
+        );
+        return result.messages;
+    } catch (error) {
+
+    }
+}
+
+export async function getBulkMessages(session, chatId, topMessageId) {
+    const client = createClient(session);
+    await client.connect();
+    client.floodSleepThreshold = 180;
+
+    const limit = pLimit(2);
+    const totalNumOfApiCalls = 15;
+    const numOfApiCalls = 5;
+    const allTasks = [];
+
+    try {
+        for (let i = 0; i < (totalNumOfApiCalls/numOfApiCalls); i++) {
+            const tasks = Array.from({ length: numOfApiCalls }, (_, i) =>
+                limit(() => getMessages(client, chatId, topMessageId - ((i+1)*100)))
+            )
+            allTasks.push(...tasks);
+        }
+
+        const results = await Promise.all(allTasks);
+
+        const analysis = await getAnalysis();
+        
+        const sessionString = client.session.save();
+
+        return { 
+            code: 200, 
+            content: {
+                session: sessionString,
+            }
+        };
+    } catch (error) {
+        console.log(error);
         return { code: error.code, content: { error: error.errorMessage } };
     }
 }
