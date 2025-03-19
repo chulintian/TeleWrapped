@@ -195,12 +195,9 @@ async function getChatMembers(client, chatId) {
         );
         
         for (const user of result.users) {
-            const {id, self, firstName, lastName, username} = user;
+            const {id, username} = user;
             users.push({
                 id: id,
-                self: self,
-                firstName: firstName,
-                lastName: lastName,
                 username: username,
             })
         }
@@ -218,8 +215,18 @@ export async function getBulkMessages(session, chatId) {
     try {
         const result = new Array();
 
-        for await (const messageJson of client.iterMessages(chatId, { limit: 3000 })) {
+        const users = await getChatMembers(client, chatId);
+
+        for await (const messageJson of client.iterMessages(chatId, { limit: 3 })) {
             const {id, fromId, peerId, fwdFrom, replyTo, date, message, pinned, reactions} = messageJson;
+
+            if (fromId == null) {
+                
+            }
+            console.log("from Id");
+            console.log(fromId);
+            console.log("peerId");
+            console.log(peerId)
             result.push({
                 id: id,
                 fromId: fromId,
@@ -233,16 +240,15 @@ export async function getBulkMessages(session, chatId) {
             })
         } 
 
-        const users = await getChatMembers(client, chatId);
-        const analysis = await getAnalysis(result, users);
-        console.log(analysis);
+        // const analysis = await getAnalysis(result, users);
         
-        const sessionString = client.session.save();
+        // const sessionString = client.session.save();
 
         return { 
             code: 200, 
             content: {
                 session: sessionString,
+                // analysis: analysis,
             }
         };
     } catch (error) {

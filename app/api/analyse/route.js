@@ -5,7 +5,7 @@ export async function POST(request) {
     const { sessionObj, chatId } = body;
     const result = await getBulkMessages(sessionObj, chatId);
 
-    return new Response(JSON.stringify(result), {
+    return new Response(JSON.stringify(result.content), {
         status: result.code,
         headers: { 'Content-Type': 'application/json' }
     });

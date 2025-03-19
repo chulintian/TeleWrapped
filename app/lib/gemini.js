@@ -209,6 +209,7 @@ const model = genAI.getGenerativeModel({
     generationConfig: {
         responseMimeType: "application/json",
         responseSchema: returnSchema,
+        temperature: 1.2,
     },
 })
 
@@ -222,8 +223,9 @@ export async function getAnalysis(history, users) {
             "\n Here are the Telegram messages for analysis: " + formattedHistory;
 
         const result = await model.generateContent(prompt);
-        
-        return result.response.text();
+        const json = JSON.parse(result.response.text());
+
+        return json;
     } catch (error) {
         console.log(error);
     }
