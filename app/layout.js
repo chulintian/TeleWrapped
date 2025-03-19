@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "TeleWrapped",
-  description: "",
+  description: "Your Telegram in review",
 };
 
 export default function RootLayout({ children }) {
