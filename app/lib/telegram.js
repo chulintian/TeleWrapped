@@ -65,6 +65,18 @@ export async function signIn(session, phoneNum, phoneCodeHash, code) {
     }
 }
 
+export async function logout(session) {
+    const client = createClient(session);
+    await client.connect();
+
+    try {
+        await client.invoke(new Api.auth.LogOut({}));
+        return { code: 200, content: { message: "Successfully logged out" } };
+    } catch (error) {
+        return { code: error.code, content: { error: error.errorMessage } };
+    }
+}
+
 async function getUser(client, userId){
     try {
         const result = await client.invoke(
