@@ -204,11 +204,7 @@ async function getChatMembers(client, chatId) {
     }
 }
 
-export async function getBulkMessages(session, chatId) {
-    const client = createClient(session);
-    await client.connect();
-    client.floodSleepThreshold = 180;
-
+async function getMessages(client, chatId) {
     try {
         const result = new Array();
 
@@ -238,7 +234,20 @@ export async function getBulkMessages(session, chatId) {
             })
         } 
 
-        const analysis = await getAnalysis(result);
+        return result;
+    } catch (error) {
+        return [];
+    }
+}
+export async function getBulkMessages(session, chatId) {
+    const client = createClient(session);
+    await client.connect();
+    client.floodSleepThreshold = 180;
+
+    try {
+        
+        const history = await getMessages(client, chatId);
+        const analysis = await getAnalysis(history);
         
         const sessionString = client.session.save();
 
