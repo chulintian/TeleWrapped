@@ -1,9 +1,4 @@
-import OpenAI from "openai";
-
-const apiKey = process.env.OPENAI_API_KEY;
-const client = new OpenAI({
-    apiKey: apiKey,
-});
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const systemPrompt = `
     You are an analyst specializing in text analysis of Telegram messages. Your task is to analyze conversations and provide insights on key aspects. Use only the provided messages and users' information for your analysis—do not assume or infer information beyond the given data. The provided messages are part of a longer conversation. Make it fun and humorous like Spotify Wrapped without using emojis.
@@ -99,31 +94,136 @@ const systemPrompt = `
     }
 `;
 
+const returnSchema = {
+    "type": "object",
+    "properties": {
+        "vibeCheck": {
+            "type": "string",
+            "description": "A summary of the vibe between the users"
+        },
+        "compatibility": {
+            "type": "object",
+            "properties": {
+                "percentage": {
+                    "type": "string",
+                    "description": "Compatibility percentage between the users"
+                },
+                "reasoning": {
+                    "type": "string",
+                    "description": "Reasoning behind the compatibility score"
+                }
+            },
+            "required": ["percentage", "reasoning"]
+        },
+        "users": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "User's unique identifier"
+                    },
+                    "firstName": {
+                        "type": "string",
+                        "description": "User's first name"
+                    },
+                    "lastName": {
+                        "type": "string",
+                        "description": "User's last name"
+                    },
+                    "username": {
+                        "type": "string",
+                        "description": "User's username"
+                    },
+                    "avgResponseTime": {
+                        "type": "integer",
+                        "description": "User's average response time in seconds"
+                    },
+                    "attachmentStyle": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "style": {
+                                    "type": "string",
+                                    "description": "The user's attachment style"
+                                },
+                                "reasoning": {
+                                    "type": "string",
+                                    "description": "Explanation for the user's attachment style"
+                                }
+                            },
+                            "required": ["style", "reasoning"]
+                        }
+                    },
+                    "greenFlags": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "flag": {
+                                    "type": "string",
+                                    "description": "Green flag for positive traits"
+                                },
+                                "reasoning": {
+                                    "type": "string",
+                                    "description": "Reasoning for the green flag"
+                                }
+                            },
+                            "required": ["flag", "reasoning"]
+                        }
+                    },
+                    "redFlags": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "flag": {
+                                    "type": "string",
+                                    "description": "Red flag for negative traits"
+                                },
+                                "reasoning": {
+                                    "type": "string",
+                                    "description": "Reasoning for the red flag"
+                                }
+                            },
+                            "required": ["flag", "reasoning"]
+                        }                   
+                    }
+                },
+                "required": [
+                    "id", "firstName", "lastName", "username", "avgResponseTime",
+                    "attachmentStyle", "greenFlags", "redFlags"
+                ]
+            }
+        }
+    },
+    "required": ["vibeCheck", "compatibility", "users"]
+}
+
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+const model = genAI.getGenerativeModel({ 
+    model: "gemini-2.0-flash",
+    systemInstruction: systemPrompt,
+    generationConfig: {
+        responseMimeType: "application/json",
+        responseSchema: returnSchema,
+    },
+})
+
 export async function getAnalysis(history, users) {
-    const formattedHistory = history.map(
-        batch => batch.map(
-            message => JSON.stringify(message)
-        )
-    );
+    const formattedHistory = history.map(message => JSON.stringify(message));
     const formattedUsers = users.map(user => JSON.stringify(user));
 
     try {
-        const completion = await client.chat.completions.create({
-            model: "o3-mini",
-            messages: [
-                {
-                    role: "system",
-                    content: systemPrompt,
-                },
-                {
-                    role: "user",
-                    content: "Here are the users:" + formattedUsers + "\n Here are the Telegram messages for analysis: " + formattedHistory,
-                }
-            ],
-            response_format: { "type": "json_object" },
-        });
+        const prompt = 
+            "Here are the users:" + formattedUsers + 
+            "\n Here are the Telegram messages for analysis: " + formattedHistory;
+
+        const result = await model.generateContent(prompt);
         
-        console.log(completion.choices[0].message.content);
+        return result.response.text();
     } catch (error) {
         console.log(error);
     }

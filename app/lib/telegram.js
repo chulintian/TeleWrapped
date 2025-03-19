@@ -1,7 +1,6 @@
 const { Api, TelegramClient } = require("telegram");
 const { StringSession } = require("telegram/sessions");
-import { getAnalysis } from "./openai"
-import pLimit from 'p-limit';
+import { getAnalysis } from "./gemini"
 
 const apiId = Number(process.env.TELEGRAM_API_ID);
 const apiHash = process.env.TELEGRAM_API_HASH;
@@ -104,7 +103,7 @@ async function getChatIds(client){
                 offsetDate: 0,
                 offsetId: 0,
                 offsetPeer: "me",
-                limit: 2,
+                limit: 30,
                 hash: BigInt("-4156887774564"),
                 excludePinned: false,
                 folderId: 0,
@@ -114,7 +113,7 @@ async function getChatIds(client){
         var count = 0;
 
         for (const chat of result.dialogs) {
-            if (count == 2) {
+            if (count == 10) {
                 break;
             }
 
