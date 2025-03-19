@@ -111,25 +111,9 @@ const returnSchema = {
             "items": {
                 "type": "object",
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "description": "User's unique identifier"
-                    },
-                    "firstName": {
-                        "type": "string",
-                        "description": "User's first name"
-                    },
-                    "lastName": {
-                        "type": "string",
-                        "description": "User's last name"
-                    },
                     "username": {
                         "type": "string",
                         "description": "User's username"
-                    },
-                    "avgResponseTime": {
-                        "type": "integer",
-                        "description": "User's average response time in seconds"
                     },
                     "attachmentStyle": {
                         "type": "array",
@@ -204,6 +188,12 @@ const model = genAI.getGenerativeModel({
     },
 })
 
+
+/**
+ * Analysis given messages using GenAI
+ * @param {*} history Chat messages from a specific chat 
+ * @returns GenAI analysis result
+ */
 export async function getAnalysis(history) {
     const formattedHistory = history.map(message => JSON.stringify(message));
 
@@ -215,6 +205,6 @@ export async function getAnalysis(history) {
 
         return json;
     } catch (error) {
-        console.log(error);
+        return {};
     }
 }
