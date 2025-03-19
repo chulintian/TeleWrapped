@@ -178,7 +178,7 @@ export async function getChatInfos(session) {
 }
 
 async function getChatMembers(client, chatId) {
-    const users = [];
+    const users = new Object();
 
     try {
         const result = await client.invoke(
@@ -196,10 +196,7 @@ async function getChatMembers(client, chatId) {
         
         for (const user of result.users) {
             const {id, username} = user;
-            users.push({
-                id: id,
-                username: username,
-            })
+            users[id] = username;
         }
         return users;
     } catch (error) {
@@ -217,16 +214,17 @@ export async function getBulkMessages(session, chatId) {
 
         const users = await getChatMembers(client, chatId);
 
-        for await (const messageJson of client.iterMessages(chatId, { limit: 3 })) {
-            const {id, fromId, peerId, fwdFrom, replyTo, date, message, pinned, reactions} = messageJson;
+        for await (const messageJson of client.iterMessages(chatId, { limit: 3000 })) {
+            var {id, fromId, peerId, fwdFrom, replyTo, date, message, pinned, reactions} = messageJson;
 
-            if (fromId == null) {
-                
+            if (fromId != null) {
+                fromId = users[String(fromId.userId.value)];
             }
-            console.log("from Id");
-            console.log(fromId);
-            console.log("peerId");
-            console.log(peerId)
+
+            if (peerId != null) {
+                peerId = users[String(peerId.userId.value)];
+            }
+
             result.push({
                 id: id,
                 fromId: fromId,
@@ -240,15 +238,15 @@ export async function getBulkMessages(session, chatId) {
             })
         } 
 
-        // const analysis = await getAnalysis(result, users);
+        const analysis = await getAnalysis(result);
         
-        // const sessionString = client.session.save();
+        const sessionString = client.session.save();
 
         return { 
             code: 200, 
             content: {
                 session: sessionString,
-                // analysis: analysis,
+                analysis: analysis,
             }
         };
     } catch (error) {

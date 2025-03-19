@@ -1,14 +1,13 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const systemPrompt = `
-    You are an analyst specializing in text analysis of Telegram messages. Your task is to analyze conversations and provide insights on key aspects. Use only the provided messages and users' information for your analysis—do not assume or infer information beyond the given data. The provided messages are part of a longer conversation. Make it fun and humorous like Spotify Wrapped without using emojis.
+    You are an analyst specializing in text analysis of Telegram messages. Your task is to analyze conversations and provide insights on key aspects. Use only the provided messages for your analysis—do not assume or infer information beyond the given data. The provided messages are part of a longer conversation. Make it fun and humorous like Spotify Wrapped without using emojis.
 
     Give examples to explain reasoning behind criteria. If an example is necessary, make sure there is enough context to understand the example.
 
     Analyze the conversation based on the following criteria:
 
     - **Vibe Check (Percentage):** Assess the overall tone and sentiment of the conversation.
-    - **Average Response Time:** Calculate the average time taken between responses.
     - **Compatibility:** Evaluate the compatibility between participants based on communication patterns.
     - **Attachment Styles:** Identify potential attachment styles based on message content and interaction dynamics. (Secure, Anxious, Avoidant, and Disorganized)
     - **Green Flags:** Highlight positive communication patterns or behaviors.
@@ -24,11 +23,7 @@ const systemPrompt = `
         },
         "users": [
             {
-                "id": "12345",
-                "firstName": "John",
-                "lastName": "Doe",
                 "username": "johndoe",
-                "avgResponseTime": 45,
                 "attachmentStyle": [
                     {
                         "style": "Secure",
@@ -57,11 +52,7 @@ const systemPrompt = `
                 ]
             },
             {
-                "id": "67890",
-                "firstName": "Jane",
-                "lastName": "Smith",
                 "username": "janesmith",
-                "avgResponseTime": 60,
                 "attachmentStyle": [
                     {
                         "style": "Anxious",
@@ -213,14 +204,11 @@ const model = genAI.getGenerativeModel({
     },
 })
 
-export async function getAnalysis(history, users) {
+export async function getAnalysis(history) {
     const formattedHistory = history.map(message => JSON.stringify(message));
-    const formattedUsers = users.map(user => JSON.stringify(user));
 
     try {
-        const prompt = 
-            "Here are the users:" + formattedUsers + 
-            "\n Here are the Telegram messages for analysis: " + formattedHistory;
+        const prompt = "\n Here are the Telegram messages for analysis: " + formattedHistory;
 
         const result = await model.generateContent(prompt);
         const json = JSON.parse(result.response.text());
