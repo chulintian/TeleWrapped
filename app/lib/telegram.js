@@ -5,10 +5,21 @@ import { getAnalysis } from "./gemini"
 const apiId = Number(process.env.TELEGRAM_API_ID);
 const apiHash = process.env.TELEGRAM_API_HASH;
 
+/**
+ * Creates client for Telegram API
+ * @param {*} sessionString Telegram API session
+ * @returns Telegram API client for specified session
+ */
 function createClient(sessionString) {
     return new TelegramClient(new StringSession(sessionString), apiId, apiHash, {});
 }
 
+
+/**
+ * Sends OTP to user's Telegram account tied to phone number
+ * @param {*} phoneNum User's phone number
+ * @returns Telegram API session & phone code hash
+ */
 export async function getCode(phoneNum) {
     const client = createClient("");
 
@@ -38,6 +49,15 @@ export async function getCode(phoneNum) {
     }
 }
 
+
+/**
+ * Sign in to user's Telegram account
+ * @param {*} session Telegram API session
+ * @param {*} phoneNum User's phone number
+ * @param {*} phoneCodeHash Phone Code Hash returned by getCode API
+ * @param {*} code OTP sent to User's Telegram account
+ * @returns Telegram API session
+ */
 export async function signIn(session, phoneNum, phoneCodeHash, code) {
     const client = createClient(session);
 
@@ -65,6 +85,12 @@ export async function signIn(session, phoneNum, phoneCodeHash, code) {
     }
 }
 
+
+/**
+ * Log out of Telegram API session
+ * @param {*} session Telegram API session
+ * @returns Success/Error message
+ */
 export async function logout(session) {
     const client = createClient(session);
     await client.connect();
@@ -77,6 +103,13 @@ export async function logout(session) {
     }
 }
 
+
+/**
+ * Get information on any Telegram user
+ * @param {*} client Telegram API client tied to a session
+ * @param {*} userId Telegram user ID
+ * @returns Information on Telegram user (username, first name, last name, etc)
+ */
 async function getUser(client, userId){
     try {
         const result = await client.invoke(
@@ -90,6 +123,13 @@ async function getUser(client, userId){
     }
 }
 
+
+/**
+ * Get information on any Telegram chat 
+ * @param {*} client Telegram API client tied to a session
+ * @param {*} chatId Telegram chat ID
+ * @returns Information on Telegram chat (name, members, etc)
+ */
 async function getChat(client, chatId){
     try {
         const result = await client.invoke(
@@ -103,6 +143,12 @@ async function getChat(client, chatId){
     }
 }
 
+
+/**
+ * Get 10 most recent chats from Telegram user account. Chats include groups and users, excluding channels and supergroups
+ * @param {*} client Telegram API client tied to a session
+ * @returns 10 most recent chats with their type, id, information (depending on the type of chats)
+ */
 async function getChatIds(client){
     var chatIdList = [];
 
@@ -167,6 +213,12 @@ async function getChatIds(client){
     }
 }
 
+
+/**
+ * Connect to client to get 10 most recent chats from user's account
+ * @param {*} session Telegram API session
+ * @returns session & 10 most recent chats
+ */
 export async function getChatInfos(session) {
 
     const client = createClient(session);
@@ -189,6 +241,13 @@ export async function getChatInfos(session) {
     }
 }
 
+
+/**
+ * Get all members of a chat
+ * @param {*} client Telegram API client tied to a session
+ * @param {*} chatId Chat ID to be checked
+ * @returns Id and username of all members
+ */
 async function getChatMembers(client, chatId) {
     const users = new Object();
 
@@ -216,6 +275,13 @@ async function getChatMembers(client, chatId) {
     }
 }
 
+
+/**
+ * Get latest messages from specified chat
+ * @param {*} client Telegram API client tied to a session
+ * @param {*} chatId Chat ID 
+ * @returns List of latest messages and its respective information (id, data, content, etc)
+ */
 async function getMessages(client, chatId) {
     try {
         const result = new Array();
@@ -251,6 +317,14 @@ async function getMessages(client, chatId) {
         return [];
     }
 }
+
+
+/**
+ * Get latest messages from a specified chat and analyse them
+ * @param {*} session Telegram API session
+ * @param {*} chatId Chat ID
+ * @returns Analysis of chat messages
+ */
 export async function getBulkMessages(session, chatId) {
     const client = createClient(session);
     await client.connect();
