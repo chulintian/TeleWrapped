@@ -122,8 +122,6 @@ async function getChatIds(client){
                 if (chat.peer.userId.value !== currUserId && chat.peer.userId.value !== BigInt("777000").valueOf()) {
                     const user = await getUser(client, chat.peer.userId);
                     const { firstName, lastName, username } = user.users[0]
-
-                    console.log(user);
                 
                     const chatInfo = {
                         type: "user",
@@ -140,7 +138,6 @@ async function getChatIds(client){
                 }
             } else if (chat.peer.className === "PeerChat") {
                 const group = await getChat(client, chat.peer.chatId);
-                console.log(group);
                 const chatInfo = {
                     type: "chat",
                     id: chat.peer.chatId,
@@ -181,47 +178,65 @@ export async function getChatInfos(session) {
     }
 }
 
-async function getMessages(client, chatId, offsetId) {
+async function getChatMembers(client, chatId) {
+    const users = [];
+
     try {
         const result = await client.invoke(
             new Api.messages.GetHistory({
                 peer: chatId,
-                offsetId: offsetId,
+                offsetId: 0,
                 offsetDate: 0,
                 addOffset: 0,
-                limit: 100,
+                limit: 1,
                 maxId: 0,
                 minId: 0,
                 hash: BigInt("-4156887774564"),
             })
         );
-        return result.messages;
+        
+        for (const user of result.users) {
+            const {id, self, firstName, lastName, username} = user;
+            users.push({
+                id: id,
+                self: self,
+                firstName: firstName,
+                lastName: lastName,
+                username: username,
+            })
+        }
+        return users;
     } catch (error) {
-
+        return []
     }
 }
 
-export async function getBulkMessages(session, chatId, topMessageId) {
+export async function getBulkMessages(session, chatId) {
     const client = createClient(session);
     await client.connect();
     client.floodSleepThreshold = 180;
 
-    const limit = pLimit(2);
-    const totalNumOfApiCalls = 15;
-    const numOfApiCalls = 5;
-    const allTasks = [];
-
     try {
-        for (let i = 0; i < (totalNumOfApiCalls/numOfApiCalls); i++) {
-            const tasks = Array.from({ length: numOfApiCalls }, (_, i) =>
-                limit(() => getMessages(client, chatId, topMessageId - ((i+1)*100)))
-            )
-            allTasks.push(...tasks);
-        }
+        const result = new Array();
 
-        const results = await Promise.all(allTasks);
+        for await (const messageJson of client.iterMessages(chatId, { limit: 3000 })) {
+            const {id, fromId, peerId, fwdFrom, replyTo, date, message, pinned, reactions} = messageJson;
+            result.push({
+                id: id,
+                fromId: fromId,
+                peerId: peerId,
+                fwdFrom: fwdFrom,
+                replyTo: replyTo,
+                date: date,
+                message: message,
+                pinned: pinned,
+                reactions: reactions,
+            })
+        } 
 
-        const analysis = await getAnalysis();
+        const users = await getChatMembers(client, chatId);
+        const analysis = await getAnalysis(result, users);
+        console.log(analysis);
         
         const sessionString = client.session.save();
 
@@ -232,7 +247,6 @@ export async function getBulkMessages(session, chatId, topMessageId) {
             }
         };
     } catch (error) {
-        console.log(error);
         return { code: error.code, content: { error: error.errorMessage } };
     }
 }

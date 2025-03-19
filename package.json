@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.0",
     "next": "15.2.1",
     "openai": "^4.87.3",
     "p-limit": "^6.2.0",
