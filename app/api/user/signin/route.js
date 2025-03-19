@@ -1,4 +1,4 @@
-import { signIn } from "../../lib/telegram"
+import { signIn } from "../../../lib/telegram"
 
 export async function POST(request) {
     const body = await request.json();

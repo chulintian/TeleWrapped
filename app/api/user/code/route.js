@@ -1,4 +1,4 @@
-import { getCode } from "../../lib/telegram"
+import { getCode } from "../../../lib/telegram"
 
 export async function POST(request) {
     const body = await request.json();
