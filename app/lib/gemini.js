@@ -111,25 +111,9 @@ const returnSchema = {
             "items": {
                 "type": "object",
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "description": "User's unique identifier"
-                    },
-                    "firstName": {
-                        "type": "string",
-                        "description": "User's first name"
-                    },
-                    "lastName": {
-                        "type": "string",
-                        "description": "User's last name"
-                    },
                     "username": {
                         "type": "string",
                         "description": "User's username"
-                    },
-                    "avgResponseTime": {
-                        "type": "integer",
-                        "description": "User's average response time in seconds"
                     },
                     "attachmentStyle": {
                         "type": "array",
