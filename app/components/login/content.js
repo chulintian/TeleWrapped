@@ -35,14 +35,12 @@ export default function Content() {
           className="place-self-center"
         />
         {requestOTP ? (
-          <div className="flex flex-col space-y-6 pt-6">
+          <div className="flex flex-col space-y-4 pt-4">
             <p className="text-center">
               Your code was sent to you via Telegram.
             </p>
-            <div className="space-y-1">
-              <OTPInput />
-              <ResendCode timer={timer}/>
-            </div>
+            <OTPInput />
+            <ResendCode timer={timer}/>
             <Button label="Verify" onClick={handleClick} alignmentClass="place-self-center" />
           </div>
         ) : (
