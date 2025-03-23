@@ -17,8 +17,8 @@ export default function PhoneNumInput() {
 
   return (
     <div>
-      <div className="relative flex flex-auto flex-row gap-5 border border-1 p-3 rounded-lg">
-        <button className='flex flex-row gap-1 w-15' onClick={handleDropdown}>
+      <div className="relative flex flex-auto flex-row gap-5 border border-1 p-3 rounded-lg bg-white w-1/3 place-self-center">
+        <button className='flex flex-row gap-1 w-15 border-e-1' onClick={handleDropdown}>
           <span className="w-[25px]">
             {selectedCountryCode.code}
           </span>
