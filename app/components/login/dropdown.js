@@ -13,7 +13,6 @@ export default function Dropdown({
       .then((response) => response.json())
       .then((data) => {
         setCountries(data);
-        console.log(typeof data);
       })
       .catch((error) => console.error('Error fetching data:', error));
   }, []);

@@ -14,6 +14,7 @@ export default function Background(){
                 alt="corn" 
                 width={75} 
                 height={75}
+                className="w-35 sm:w-20"
               />
             </td>
           </tr>
@@ -26,11 +27,12 @@ export default function Background(){
                 alt="corn" 
                 width={75} 
                 height={75}
+                className="w-35 sm:w-20"
               />
             </td>
           </tr>
-          <tr>
-            <td className="invisible sm:visible">
+          <tr className="h-1/2">
+            <td className="hidden sm:block">
               <Image 
                 src="/ingredients/extra/tofu.png" 
                 alt="corn" 
@@ -41,7 +43,7 @@ export default function Background(){
           </tr>
           <tr>
             <td/><td/><td/>
-            <td className="w-1/2"></td>
+            <td className="w-1/2 hidden sm:block"></td>
             <td/>
             <td>
               <Image 
@@ -49,6 +51,7 @@ export default function Background(){
                 alt="corn" 
                 width={75} 
                 height={75}
+                className="w-35 sm:w-20"
               />
             </td>
           </tr>
@@ -60,6 +63,7 @@ export default function Background(){
                 alt="corn" 
                 width={75} 
                 height={75}
+                className="w-35 sm:w-20"
               />
             </td>
           </tr>
