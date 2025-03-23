@@ -4,7 +4,7 @@ export default function Button({
     alignmentClass="",
 }) {
     return (
-        <div className={`${alignmentClass} bg-[#42a85e] border-1 p-3 rounded-lg w-fit`} onClick={onClick}>
+        <div className={`${alignmentClass} bg-[#42a85e] border-[1.5px] py-1 px-3 rounded-lg w-fit`} onClick={onClick}>
             {label}
         </div>
     )

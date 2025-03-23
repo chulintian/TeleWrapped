@@ -19,15 +19,12 @@ export default function Dropdown({
   }, []);
 
   function handleClick(code, dialCode) {
-    setSelectedCountryCode({
-      code: code, 
-      dialCode: dialCode
-    });
+    setSelectedCountryCode(dialCode);
     setDropdownOpen(false);
   }
 
   return(
-    <div className="absolute border border-1 p-3 rounded-lg w-fit flex flex-col gap-y-2 h-56 overflow-y-auto bg-white">
+    <div className="absolute bg-white border border-[1.5px] py-1 px-3 rounded-lg flex flex-col gap-y-2 h-30 overflow-y-auto overflow-x-hidden w-full">
       {countries.map((country) => (
         <button key={country.code} className="text-left flex flex-row gap-x-2" onClick={() => handleClick(country.code, country.dial_code)}>
           <p className="w-15">

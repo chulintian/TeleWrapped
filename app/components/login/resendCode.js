@@ -12,11 +12,11 @@ export default function ResendCode({
   }
 
   return (
-    <div>
-      <button className="underline italic" onClick={handleClick} disabled={timer !=0}>
+    <>
+      <button className="underline italic text-xs text-gray-700 w-full text-center" onClick={handleClick} disabled={timer !=0}>
         Did not receive? Resend code 
         {timer !=0 && <span>in {timer}</span>}
       </button>
-    </div>
+    </>
   )
 }
