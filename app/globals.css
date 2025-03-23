@@ -8,3 +8,22 @@
 .remove-arrow {
     -moz-appearance: textfield;
 }
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background-color: rgba(255, 255, 255, 0);
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
