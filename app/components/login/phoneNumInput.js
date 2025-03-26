@@ -13,9 +13,9 @@ export default function PhoneNumInput() {
   }
 
   return (
-    <div className="relative w-full sm:4/5 md:3/5">
-      <div className="flex flex-auto flex-row px-3 py-1 border border-[1.5px] rounded-lg bg-white place-self-center">
-        <button className='flex flex-row gap-1 w-25 pe-4' onClick={handleDropdown}>
+    <div className="w-full sm:4/5 md:3/5">
+      <div className=" relative flex flex-auto flex-row px-3 py-1 border border-[1.5px] rounded-lg bg-white place-self-center">
+        <button className='flex flex-row gap-1 w-25 pe-4 focus:outline-0' onClick={handleDropdown}>
           <span className="w-12">
             {selectedCountryCode}
           </span>
@@ -23,13 +23,13 @@ export default function PhoneNumInput() {
         </button>
         <div className="border-e-[1.5px] my-1"></div>
         <input type="number" placeholder='Phone number' className='outline-0 remove-arrow w-full ms-4'/>
-      </div>
-      {dropdownOpen && (
-          <Dropdown 
-            setSelectedCountryCode={setSelectedCountryCode} 
-            setDropdownOpen={setDropdownOpen} 
-          />
+        {dropdownOpen && (
+        <Dropdown 
+          setSelectedCountryCode={setSelectedCountryCode} 
+          setDropdownOpen={setDropdownOpen} 
+        />
         )}
+      </div>
     </div>
   );
 }

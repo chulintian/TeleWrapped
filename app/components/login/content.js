@@ -47,7 +47,7 @@ export default function Content() {
         ) : (
           <div className="flex flex-col space-y-4 pt-4">
             <p className="text-center">
-              Log in to use your Telegram account with <span className="font-bold">TeleWrapped</span>
+              Log in to use your Telegram account with <span className="font-bold">TeleWrapped</span>.
             </p>
             <PhoneNumInput />
             <Button label="Request OTP" onClick={handleClick} alignmentClass="place-self-center" />

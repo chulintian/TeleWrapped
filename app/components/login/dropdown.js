@@ -23,17 +23,21 @@ export default function Dropdown({
   }
 
   return(
-    <div className="absolute bg-white border border-[1.5px] py-1 px-3 rounded-lg flex flex-col gap-y-2 h-25 overflow-y-auto overflow-x-hidden w-full">
-      {countries.map((country) => (
-        <button key={country.code} className="text-left flex flex-row gap-x-2" onClick={() => handleClick(country.code, country.dial_code)}>
-          <p className="w-15">
-            {country.dial_code}
-          </p>
-          <p className="">
-            {country.name}
-          </p>
-        </button>
-      ))}
+    <div className="absolute left-0 right-0 top-8 bg-white border border-[1.5px] py-1 px-3 rounded-lg h-25 overflow-y-auto overflow-x-hidden">
+      <table className="border-0 table-auto">
+        <tbody>
+          {countries.map((country) => (
+            <tr key={country.code} className="py-1" onClick={() => handleClick(country.code, country.dial_code)}>
+              <td className="pe-3">
+                {country.dial_code}
+              </td>
+              <td>
+                {country.name}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   )
 }
