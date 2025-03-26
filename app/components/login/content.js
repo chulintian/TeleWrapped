@@ -6,6 +6,7 @@ import OTPInput from "./otpInput";
 import ResendCode from "./resendCode";
 import PhoneNumInput from "./phoneNumInput";
 import Button from "../common/button";
+import { TiWarningOutline } from "react-icons/ti";
 
 export default function Content() {
   const [requestOTP, setRequestOTP] = useState("");
@@ -44,9 +45,18 @@ export default function Content() {
             <Button label="Verify" onClick={handleClick} alignmentClass="place-self-center" />
           </div>
         ) : (
-          <div className="flex flex-col space-y-6 pt-12">
+          <div className="flex flex-col space-y-4 pt-4">
+            <p className="text-center">
+              Log in to use your Telegram account with <span className="font-bold">TeleWrapped</span>
+            </p>
             <PhoneNumInput />
             <Button label="Request OTP" onClick={handleClick} alignmentClass="place-self-center" />
+            <p className="text-xs text-center italic flex flex-row gap-x-1">
+              <TiWarningOutline size={17} className="text-end"/> 
+              <span>
+                Disclaimer: Your data will only be used for chat analysis and will not be retained.
+              </span>
+            </p>
           </div>
         )}
       </div>

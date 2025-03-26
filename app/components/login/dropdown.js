@@ -23,7 +23,7 @@ export default function Dropdown({
   }
 
   return(
-    <div className="absolute bg-white border border-[1.5px] py-1 px-3 rounded-lg flex flex-col gap-y-2 h-30 overflow-y-auto overflow-x-hidden w-full">
+    <div className="absolute bg-white border border-[1.5px] py-1 px-3 rounded-lg flex flex-col gap-y-2 h-25 overflow-y-auto overflow-x-hidden w-full">
       {countries.map((country) => (
         <button key={country.code} className="text-left flex flex-row gap-x-2" onClick={() => handleClick(country.code, country.dial_code)}>
           <p className="w-15">

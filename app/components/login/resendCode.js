@@ -13,8 +13,9 @@ export default function ResendCode({
 
   return (
     <>
-      <button className="underline italic text-xs text-gray-700 w-full text-center" onClick={handleClick} disabled={timer !=0}>
-        Did not receive? Resend code 
+      <button className="italic text-xs w-full text-center" onClick={handleClick} disabled={timer !=0}>
+        Did not receive?
+        <span className={`ms-1 ${timer === 0 ? "underline" : ""}`}>Resend code</span>
         {timer !=0 && <span> in {timer}</span>}
       </button>
     </>
