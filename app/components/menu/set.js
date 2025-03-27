@@ -11,14 +11,15 @@ export default function Set({
           alt="hotpot"
           width={100}
           height={100}
-          className="w-14 me-3"
+          className="w-12 me-3"
         />
         <div className="self-center">
           <p className="font-bold">Chat Name</p>
-          {/* <p>Comes with {ingredients[0]}, {ingredients[1]}, {ingredients[2]} and {ingredients[3]}</p> */} Need settle loading issue first
+          {/* <p>Comes with {ingredients[0]}, {ingredients[1]}, {ingredients[2]} and {ingredients[3]}</p> */} 
+          <p className="text-xs">Need settle loading issue first</p>
         </div>
       </div>
-      <div className="rounded-full p-1 aspect-square w-10 bg-[#f8a78d] h-10 flex justify-center items-center self-center">
+      <div className="rounded-full p-1 aspect-square w-8 bg-[#f8a78d] h-8 flex justify-center items-center self-center">
         <Image 
           src="/cart.png" 
           alt="cart" 

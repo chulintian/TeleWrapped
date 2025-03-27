@@ -2,7 +2,7 @@ import Image from "next/image"
 
 export default function Background(){
   return(
-    <div className="relative w-full h-dvh p-5 ">
+    <div className="relative w-full h-dvh p-5 overflow-y-hidden">
       <table className="table-auto h-full w-full">
         <tbody>
           <tr>
@@ -14,7 +14,7 @@ export default function Background(){
                 alt="corn" 
                 width={75} 
                 height={75}
-                className="w-35 sm:w-20"
+                className="w-35 sm:w-18 animate-wiggle"
               />
             </td>
           </tr>
@@ -27,7 +27,7 @@ export default function Background(){
                 alt="corn" 
                 width={75} 
                 height={75}
-                className="w-35 sm:w-20"
+                className="w-35 sm:w-18 animate-wiggle"
               />
             </td>
           </tr>
@@ -38,6 +38,7 @@ export default function Background(){
                 alt="corn" 
                 width={75} 
                 height={75}
+                className="animate-wiggle"
               />
             </td>
           </tr>
@@ -51,7 +52,7 @@ export default function Background(){
                 alt="corn" 
                 width={75} 
                 height={75}
-                className="w-35 sm:w-20"
+                className="w-35 sm:w-18 animate-wiggle"
               />
             </td>
           </tr>
@@ -63,7 +64,7 @@ export default function Background(){
                 alt="corn" 
                 width={75} 
                 height={75}
-                className="w-35 sm:w-20"
+                className="w-35 sm:w-18 animate-wiggle"
               />
             </td>
           </tr>
