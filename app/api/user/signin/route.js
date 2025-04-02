@@ -5,8 +5,8 @@ export async function POST(request) {
     const { sessionObj, phoneNum, phoneCodeHash, code } = body;
     const result = await signIn(sessionObj, phoneNum, phoneCodeHash, code);
 
-    return new Response(result.content), {
+    return new Response(JSON.stringify(result.content), {
         status: result.code,
         headers: { 'Content-Type': 'application/json' }
-    };
+    });
 }
