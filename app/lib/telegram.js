@@ -226,6 +226,9 @@ export async function getChatInfos(session) {
 
     try {
         const chatInfo = await getChatIds(client);
+        if (chatInfo.length ==0) {
+            throw new Error("Error with Telegram");
+        }
         
         const sessionString = client.session.save();
 
@@ -237,7 +240,10 @@ export async function getChatInfos(session) {
             }
         };
     } catch (error) {
-        return { code: error.code, content: { error: error.errorMessage } };
+        return { 
+            code: error.code || 500, 
+            content: { error: error.message || "Unknown error" }
+        };
     }
 }
 
@@ -280,15 +286,16 @@ async function getChatMembers(client, chatId) {
  * Get latest messages from specified chat
  * @param {*} client Telegram API client tied to a session
  * @param {*} chatId Chat ID 
+ * @param {*} numOfMessages Number of Telegram chat messages to be retrieved for analysis
  * @returns List of latest messages and its respective information (id, data, content, etc)
  */
-async function getMessages(client, chatId) {
+async function getMessages(client, chatId, numOfMessages) {
     try {
         const result = new Array();
 
         const users = await getChatMembers(client, chatId);
 
-        for await (const messageJson of client.iterMessages(chatId, { limit: 3000 })) {
+        for await (const messageJson of client.iterMessages(chatId, { limit: numOfMessages })) {
             var {id, fromId, peerId, fwdFrom, replyTo, date, message, pinned, reactions} = messageJson;
 
             if (fromId != null) {
@@ -323,17 +330,27 @@ async function getMessages(client, chatId) {
  * Get latest messages from a specified chat and analyse them
  * @param {*} session Telegram API session
  * @param {*} chatId Chat ID
+ * @param {*} numOfMessages Number of Telegram chat messages to be retrieved for analysis
  * @returns Analysis of chat messages
  */
-export async function getBulkMessages(session, chatId) {
+export async function getBulkMessages(session, chatId, numOfMessages) {
     const client = createClient(session);
     await client.connect();
     client.floodSleepThreshold = 180;
 
     try {
         
-        const history = await getMessages(client, chatId);
+        const history = await getMessages(client, chatId, numOfMessages);
+        
+        if (history.length == 0) {
+            throw new Error("Error with Telegram");
+        }
+
         const analysis = await getAnalysis(history);
+
+        if (Object.keys(analysis).length === 0) {
+            throw new Error("Error with Gemini");
+        }
         
         const sessionString = client.session.save();
 
@@ -345,6 +362,9 @@ export async function getBulkMessages(session, chatId) {
             }
         };
     } catch (error) {
-        return { code: error.code, content: { error: error.errorMessage } };
+        return { 
+            code: error.code || 500, 
+            content: { error: error.message || "Unknown error" }
+        };
     }
 }

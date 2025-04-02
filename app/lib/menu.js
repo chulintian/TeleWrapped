@@ -42,7 +42,7 @@ function getRandItem(category){
 
 
 /**
- * Get 10 unique set menus with 5 ingredients, 1 ingredient from 5 categories
+ * Get 10 unique set menus with 6 ingredients, 1 ingredient from 6 categories
  * @returns A list of 10 unique menus
  */
 export function generateSetMenus(){

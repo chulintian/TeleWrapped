@@ -7,7 +7,7 @@ const systemPrompt = `
 
     Analyze the conversation based on the following criteria:
 
-    - **Vibe Check (Percentage):** Assess the overall tone and sentiment of the conversation.
+    - **Vibe Check (Percentage):** Assess the overall tone and sentiment of the conversation. (it should be a short few sentences)
     - **Compatibility:** Evaluate the compatibility between participants based on communication patterns.
     - **Attachment Styles:** Identify potential attachment styles based on message content and interaction dynamics. (Secure, Anxious, Avoidant, and Disorganized)
     - **Green Flags:** Highlight positive communication patterns or behaviors.
@@ -168,8 +168,7 @@ const returnSchema = {
                     }
                 },
                 "required": [
-                    "id", "firstName", "lastName", "username", "avgResponseTime",
-                    "attachmentStyle", "greenFlags", "redFlags"
+                    "username", "attachmentStyle", "greenFlags", "redFlags"
                 ]
             }
         }
@@ -184,7 +183,7 @@ const model = genAI.getGenerativeModel({
     generationConfig: {
         responseMimeType: "application/json",
         responseSchema: returnSchema,
-        temperature: 1.2,
+        temperature: 1,
     },
 })
 
@@ -205,6 +204,7 @@ export async function getAnalysis(history) {
 
         return json;
     } catch (error) {
+        console.log(error);
         return {};
     }
 }
