@@ -1,29 +1,32 @@
 const ingredients ={
-    "greenVeg": [
+    "greenFlag": [
         "bokchoy",
         "broccoli",
         "leek"
     ],
-    "otherVeg": [
+    "numOfMessages": [
         "tomato",
-        "radish",
+        "corn",
         "carrot"
     ],
-    "meat": [
+    "redFlag": [
         "crab",
         "meat",
         "prawn"
     ],
-    "mushroom": [
+    "compatibility": [
         "enoki",
         "shiitake"
     ],
-    "extra": [
-        "egg", 
-        "fishcake", 
-        "noodle", 
+    "attachmentStyle": [
+        "fishcake",  
         "tofu"
-    ]
+    ],
+    "vibeCheck": [
+        "egg", 
+        "radish", 
+        "noodle", 
+    ],
 }
 
 
