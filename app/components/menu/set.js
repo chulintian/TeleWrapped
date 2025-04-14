@@ -4,7 +4,7 @@ export default function Set({
   ingredients
 }) {
   return(
-    <div className="border rounded-lg flex flex-row py-5 md:py-2 px-3 bg-white flex flex-row justify-between text-sm">
+    <div className="border rounded-lg flex flex-row py-5 md:py-2 px-3 bg-white justify-between text-sm">
       <div className="me-2 flex flex-row">
        <Image
           src="/hotpot/pot.png"
