@@ -8,7 +8,7 @@ export default function Background(){
           <tr>
             <td>
               <Image 
-                src="/ingredients/compatibility/shitake.png" 
+                src="/ingredients/compatibility/shiitake.png" 
                 alt="corn" 
                 width={75} 
                 height={75}

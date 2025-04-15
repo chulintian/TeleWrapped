@@ -5,14 +5,13 @@ import Set from "../components/menu/set"
 import { useEffect, useState } from "react";
 
 export default function Menu() {
-  const [chats, setChats] = useState(["", "", "","","","","","","",""]); //for telegram chats
-  const [ingredients, setIngredients] = useState([]);
+  const [chats, setChats] = useState(["", "", "","","","","","","",""]); // get from session
+  const [ingredients, setIngredients] = useState([]); // get from session
 
-  function getIngredients() {
+  function getIngredients() { // to be gone
     fetch('/api/generate')
       .then(response => response.json())
       .then(data => {
-        console.log(data.sets);
         setIngredients(data.sets);
       })
       .catch(error => {

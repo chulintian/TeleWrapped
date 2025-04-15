@@ -38,7 +38,7 @@ export default function Background(){
                 alt="corn" 
                 width={75} 
                 height={75}
-                className="animate-wiggle"
+                className="sm:w-18 animate-wiggle"
               />
             </td>
           </tr>

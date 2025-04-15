@@ -1,7 +1,9 @@
 import { useState, useRef } from "react"
 
-export default function OTPInput(){
-  const [otp, setOtp] = useState(["", "", "", "", ""]);
+export default function OTPInput({
+  otp,
+  setOtp,
+}){
   const inputRefs = useRef([]);
 
   function handleChange(index, value) {

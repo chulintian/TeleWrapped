@@ -7,13 +7,31 @@ import ResendCode from "./resendCode";
 import PhoneNumInput from "./phoneNumInput";
 import Button from "../common/button";
 import { TiWarningOutline } from "react-icons/ti";
+import { useRouter } from "next/navigation";
 
 export default function Content() {
-  const [requestOTP, setRequestOTP] = useState("");
+  const [requestOTPState, setRequestOTPState] = useState("");
   const [timer, setTimer] = useState(30);
+  const [phoneNumInput, setPhoneNumInput] = useState("+65 ");
+  const [otp, setOtp] = useState(() => Array(5).fill(""));
 
-  function handleClick() {
-    setRequestOTP(true);
+  const router = useRouter();
+
+  function handleRequestClick() {
+    resetTimer();
+    sessionStorage.setItem("phoneNum", phoneNumInput);
+  }
+
+  async function handleVerifyClick() {
+    const success = await verifyCode();
+    if (success) {
+      router.push("/retrieval");
+    }
+  }
+
+  function resetTimer() {
+    setRequestOTPState(true);
+    requestOTP();
     const interval = setInterval(() => {
       setTimer((prevTimer) => {
         if (prevTimer <= 1) {
@@ -23,6 +41,57 @@ export default function Content() {
         return prevTimer - 1;
       });
     }, 1000);
+  }
+
+  function requestOTP() {
+    fetch('/api/user/code', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        phoneNum: phoneNumInput,
+      }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        sessionStorage.setItem("phoneCodeHash", data.phoneCodeHash);
+        sessionStorage.setItem("session", data.session)
+      })
+      .catch(error => {
+        console.error("Error fetching data:", error)
+      });
+  }
+
+  async function verifyCode() {
+    try {
+      const response = await fetch('/api/user/code', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sessionObj: sessionStorage.getItem("session"),
+          phoneNum: sessionStorage.getItem("phoneNum"),
+          phoneCodeHash: sessionStorage.getItem("phoneCodeHash"),
+          code: otp.join("")
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data?.error || "Verification failed");
+      }
+  
+      sessionStorage.setItem("phoneCodeHash", data.phoneCodeHash);
+      sessionStorage.setItem("session", data.session);
+  
+      return true;
+    } catch (error) {
+      console.error("Error verifying code:", error);
+      return false;
+    }
   }
 
   return (
@@ -35,23 +104,23 @@ export default function Content() {
           height={300}
           className="place-self-center"
         />
-        {requestOTP ? (
+        {requestOTPState ? (
           <div className="flex flex-col space-y-4 pt-4">
             <p className="text-center">
               Your code was sent to you via Telegram.
             </p>
-            <OTPInput />
-            <ResendCode timer={timer}/>
-            <Button label="Verify" onClick={handleClick} alignmentClass="place-self-center" />
+            <OTPInput otp={otp} setOtp={setOtp}/>
+            <ResendCode timer={timer} />
+            <Button label="Verify" onClick={handleVerifyClick} alignmentClass="place-self-center" />
           </div>
         ) : (
           <div className="flex flex-col space-y-4 pt-4">
             <p className="text-center">
               Log in to use your Telegram account with <span className="font-bold">TeleWrapped</span>.
             </p>
-            <PhoneNumInput />
-            <Button label="Request OTP" onClick={handleClick} alignmentClass="place-self-center" />
-            <p className="text-xs text-center italic flex flex-row gap-x-1">
+            <PhoneNumInput phoneNumInput={phoneNumInput} setPhoneNumInput={setPhoneNumInput} />
+            <Button label="Request OTP" onClick={handleRequestClick} alignmentClass="place-self-center" />
+            <p className="text-xs mx-auto italic flex flex-row gap-x-1">
               <TiWarningOutline size={17} className="text-end"/> 
               <span>
                 Disclaimer: Your data will only be used for chat analysis and will not be retained.
