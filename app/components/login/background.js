@@ -10,7 +10,7 @@ export default function Background(){
             <td/>
             <td>
               <Image 
-                src="/ingredients/otherVeg/corn.png" 
+                src="/ingredients/numOfMessages/corn.png" 
                 alt="corn" 
                 width={75} 
                 height={75}
@@ -23,7 +23,7 @@ export default function Background(){
             <td className="w-1/2"></td>
             <td>
               <Image 
-                src="/ingredients/greenVeg/bokchoy.png" 
+                src="/ingredients/greenFlag/bokchoy.png" 
                 alt="corn" 
                 width={75} 
                 height={75}
@@ -34,7 +34,7 @@ export default function Background(){
           <tr className="h-1/2">
             <td className="hidden sm:block">
               <Image 
-                src="/ingredients/extra/tofu.png" 
+                src="/ingredients/attachmentStyle/tofu.png" 
                 alt="corn" 
                 width={75} 
                 height={75}
@@ -48,7 +48,7 @@ export default function Background(){
             <td/>
             <td>
               <Image 
-                src="/ingredients/meat/meat.png" 
+                src="/ingredients/redFlag/meat.png" 
                 alt="corn" 
                 width={75} 
                 height={75}
@@ -60,7 +60,7 @@ export default function Background(){
             <td/>
             <td>
               <Image 
-                src="/ingredients/mushroom/shiitake.png" 
+                src="/ingredients/compatibility/shiitake.png" 
                 alt="corn" 
                 width={75} 
                 height={75}

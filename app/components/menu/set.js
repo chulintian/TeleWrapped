@@ -11,7 +11,7 @@ export default function Set({
           alt="hotpot"
           width={100}
           height={100}
-          className="w-12 me-3"
+          className="me-3 object-contain h-[80%] self-center"
         />
         <div className="self-center">
           <p className="font-bold">Chat Name</p>
@@ -20,7 +20,7 @@ export default function Set({
         </div>
       </div>
       <div className="rounded-full p-1 aspect-square w-8 bg-[#f8a78d] h-8 flex justify-center items-center self-center">
-        <Image 
+        <Image
           src="/cart.png" 
           alt="cart" 
           height={100} 

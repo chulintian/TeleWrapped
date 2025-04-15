@@ -26,7 +26,7 @@ export default function Menu() {
   
 
   return (
-    <div className="h-dvh w-full py-5 px-7 overflow-y-hidden">
+    <div className="h-dvh w-full py-5 px-7 overflow-y">
       <div className="w-full mb-4">
         <Image
             src="/logo2.png"
@@ -39,13 +39,13 @@ export default function Menu() {
           Top 10 Hot Pot Set Menu
         </p>
       </div>
-      <div className="flex flex-col md:flex-row gap-y-4 md:gap-x-2 ">
-        <div className="flex flex-col gap-y-4 md:gap-y-2 md:w-1/2">
+      <div className="flex flex-col h-[75%] md:flex-row gap-y-4 md:gap-x-2 border-2 border-black">
+        <div className="flex flex-col h-max gap-y-4 md:gap-y-2 md:w-1/2">
           {chats.slice(0,5).map((chat, index) => (
              <Set key={index} ingredients={ingredients[index]} />
           ))}
         </div>
-        <div className="flex flex-col gap-y-4 md:gap-y-2 md:w-1/2">
+        <div className="flex flex-col h-max gap-y-4 md:gap-y-2 md:w-1/2">
           {chats.slice(4,9).map((chat, index) => (
             <Set key={index} ingredients={ingredients[index+5]}/>
           ))}
