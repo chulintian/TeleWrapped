@@ -37,7 +37,7 @@ export default function PrepVideo() {
           className="w-4/5 sm:w-1/2 md:w-1/3"
         />
       </div>
-      <Prep loading={loading} duration={duration} />
+      <Prep/>
     </div>
   );
 }
