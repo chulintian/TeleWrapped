@@ -37,8 +37,20 @@
   }
 }
 
-/* Apply the animation */
 .animate-wiggle {
   animation: wiggle 1s ease-in-out infinite;
   transform-origin: center
+}
+
+@keyframes loading {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-loading-bar {
+  animation: loading 5s linear forwards; 
 }
