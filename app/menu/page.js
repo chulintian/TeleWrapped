@@ -5,24 +5,29 @@ import Set from "../components/menu/set"
 import { useEffect, useState } from "react";
 
 export default function Menu() {
-  const [chats, setChats] = useState(["", "", "","","","","","","",""]); // get from session
-  const [ingredients, setIngredients] = useState([]); // get from session
+  const [chats, setChats] = useState([]);
+  const [ingredients, setIngredients] = useState([]);
 
-  function getIngredients() { // to be gone
-    fetch('/api/generate')
-      .then(response => response.json())
-      .then(data => {
-        setIngredients(data.sets);
-      })
-      .catch(error => {
-        console.error("Error fetching data:", error);
-      });
+  function getChatName(chatInfo, type) {
+    if (type=="user") {
+      return chatInfo.firstName ?? chatInfo.username;
+    } else {
+      return chatInfo.title;
+    }
   }
 
   useEffect(() => {
-    getIngredients();
-  }, [])
-  
+    try {
+      const storedChats = JSON.parse(sessionStorage.getItem("chats"));
+      const storedIngredients = JSON.parse(sessionStorage.getItem("ingredients"));
+      setChats(storedChats);
+      setIngredients(storedIngredients);
+    } catch (error) {
+      console.error("Error parsing data from sessionStorage", error);
+      setChats([]);
+      setIngredients([]);
+    }
+  }, []);
 
   return (
     <div className="h-dvh w-full py-5 px-7 overflow-y">
@@ -38,15 +43,15 @@ export default function Menu() {
           Top 10 Hot Pot Set Menu
         </p>
       </div>
-      <div className="flex flex-col h-[75%] md:flex-row gap-y-4 md:gap-x-2 border-2 border-black">
-        <div className="flex flex-col h-max gap-y-4 md:gap-y-2 md:w-1/2">
+      <div className="flex flex-col h-[75%] md:flex-row gap-y-4 md:gap-x-2">
+        <div className="flex flex-col md:h-max gap-y-4 md:gap-y-2 md:w-1/2">
           {chats.slice(0,5).map((chat, index) => (
-             <Set key={index} ingredients={ingredients[index]} />
+             <Set key={index} chatName={getChatName(chat.info, chat.type)} ingredients={ingredients[index]} />
           ))}
         </div>
-        <div className="flex flex-col h-max gap-y-4 md:gap-y-2 md:w-1/2">
+        <div className="flex flex-col md:h-max gap-y-4 md:gap-y-2 md:w-1/2">
           {chats.slice(4,9).map((chat, index) => (
-            <Set key={index} ingredients={ingredients[index+5]}/>
+            <Set key={index} chatName={getChatName(chat.info, chat.type)} ingredients={ingredients[index+5]}/>
           ))}
         </div>
       </div>

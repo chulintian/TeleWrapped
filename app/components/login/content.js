@@ -1,9 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import Image from "next/image";
 import OTPInput from "./otpInput";
-import ResendCode from "./resendCode";
 import PhoneNumInput from "./phoneNumInput";
 import Button from "../common/button";
 import { TiWarningOutline } from "react-icons/ti";
@@ -14,13 +13,31 @@ export default function Content() {
   const [timer, setTimer] = useState(30);
   const [phoneNumInput, setPhoneNumInput] = useState("+65 ");
   const [otp, setOtp] = useState(() => Array(5).fill(""));
+  const [resendLimit, setResendLimit] = useState(false);
 
   const router = useRouter();
+  
+  const resendCount = useRef(0);
+  const maxResend = 3;
 
-  function handleRequestClick() {
+  function handleClick() {
+    if (resendCount.current >= maxResend) {
+      setResendLimit(true);
+      return;
+    }
+    setResendLimit(false);
+    resendCount.current++;
     resetTimer();
     sessionStorage.setItem("phoneNum", phoneNumInput);
   }
+
+  function handleRequestClick() {
+    resetTimer(); 
+    sessionStorage.setItem("phoneNum", phoneNumInput);
+    resendCount.current = 0; 
+    setResendLimit(false);   
+  }
+  
 
   async function handleVerifyClick() {
     const success = await verifyCode();
@@ -32,6 +49,7 @@ export default function Content() {
   function resetTimer() {
     setRequestOTPState(true);
     requestOTP();
+    setTimer(30); 
     const interval = setInterval(() => {
       setTimer((prevTimer) => {
         if (prevTimer <= 1) {
@@ -65,7 +83,7 @@ export default function Content() {
 
   async function verifyCode() {
     try {
-      const response = await fetch('/api/user/code', {
+      const response = await fetch('/api/user/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -92,8 +110,8 @@ export default function Content() {
       console.error("Error verifying code:", error);
       return false;
     }
-  }
-
+  }  
+  
   return (
     <div className="absolute bottom-0 top-0 right-0 left-0 h-full flex flex-col pt-10 p-5 justify-center items-center overflow-y-hidden overflow-x-hidden">
       <div className="flex flex-col gap-4 p-10 w-full sm:w-3/4 md:w-2/3 lg:w-1/2">
@@ -110,7 +128,17 @@ export default function Content() {
               Your code was sent to you via Telegram.
             </p>
             <OTPInput otp={otp} setOtp={setOtp}/>
-            <ResendCode timer={timer} />
+            {resendLimit ? (
+              <p className="italic text-xs w-full text-center">
+                You have reached the maximum number of resends.
+              </p>
+            ) : (
+              <button className="italic text-xs w-full text-center" onClick={handleClick} disabled={timer !=0}>
+                Did not receive?
+                <span className={`ms-1 ${timer === 0 ? "underline" : ""}`}>Resend code</span>
+                {timer !=0 && <span> in {timer}</span>}
+              </button>
+            )}
             <Button label="Verify" onClick={handleVerifyClick} alignmentClass="place-self-center" />
           </div>
         ) : (

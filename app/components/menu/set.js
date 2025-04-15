@@ -1,7 +1,8 @@
 import Image from "next/image"
 
 export default function Set({
-  ingredients
+  chatName,
+  ingredients,
 }) {
   return(
     <div className="border rounded-lg flex flex-row py-5 md:py-2 px-3 bg-white justify-between text-sm">
@@ -14,7 +15,7 @@ export default function Set({
           className="me-3 object-contain h-[80%] self-center"
         />
         <div className="self-center">
-          <p className="font-bold">Chat Name</p>
+          <p className="font-bold">{chatName}</p>
           {/* <p>Comes with {ingredients[0]}, {ingredients[1]}, {ingredients[2]} and {ingredients[3]}</p> */} 
           <p className="text-xs">Need settle loading issue first</p>
         </div>

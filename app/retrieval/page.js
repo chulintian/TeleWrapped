@@ -8,22 +8,49 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 export default function Retrieval() {
   const router = useRouter(); 
-  const [duration, setDuration] = useState(0);
 
+  // get ingredients and chats, route aft retrieval -- to be tested
   useEffect(() => {
-    setDuration(5);
+    Promise.all([
+      fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sessionObj: sessionStorage.getItem("session") 
+        }),
+      })
+        .then(res => res.json())
+        .then(data => {
+          sessionStorage.setItem("chats", JSON.stringify(data.chatInfo));
+        }),
+      fetch('/api/generate')
+        .then(res => res.json())
+        .then(data => {
+          sessionStorage.setItem("ingredients", JSON.stringify(data.sets));
+        })
+    ])
+    .then(() => {
+      router.push("/menu");
+    })
+    .catch(error => {
+      console.error("Error fetching data:", error);
+    });
   }, []);
 
+  // log out once tab is closed -- to be tested
   useEffect(() => {
-    if (duration === 0) return; 
-
-    const timeoutId = setTimeout(() => {
-      setLoading(false);
-      router.push("/menu");
-    }, duration * 1000);
-
-    return () => clearTimeout(timeoutId);
-  }, [duration, router]);
+    const session = sessionStorage.getItem("session");
+    if (!session) return;
+  
+    const handleLogout = () => {
+      navigator.sendBeacon("/logout", session);
+    };
+  
+    window.addEventListener("beforeunload", handleLogout);
+    return () => window.removeEventListener("beforeunload", handleLogout);
+  }, []);
 
   return (
     <div className="w-full h-screen pt-5 px-7 flex flex-col items-center">
