@@ -1,5 +1,6 @@
 import { Open_Sans } from "next/font/google";
 import "./globals.css";
+import LogoutOnUnload from "./components/common/logoutOnUnload";
 
 const openSans = Open_Sans({
   variable: "--font-open-sans",
@@ -17,9 +18,8 @@ export default function RootLayout({ children }) {
       <head>
         <meta charSet="UTF-8" />
       </head>
-      <body
-        className={`${openSans.variable} antialiased bg-[#efe7dc]`}
-      >
+      <body className={`${openSans.variable} antialiased bg-[#efe7dc]`}>
+        <LogoutOnUnload />
         {children}
       </body>
     </html>
