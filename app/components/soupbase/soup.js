@@ -4,7 +4,7 @@ import { MdOutlineTimer } from "react-icons/md";
 export default function Soup({ soupbase, handleClick }) {
   return (
     <div
-      className="flex flex-col items-center w-64 p-4"
+      className="flex flex-col items-center w-64 p-4 cursor-pointer"
       onClick={() => handleClick(soupbase)}
     >
       <Image

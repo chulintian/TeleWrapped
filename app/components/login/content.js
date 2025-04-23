@@ -7,6 +7,7 @@ import PhoneNumInput from "./phoneNumInput";
 import Button from "../common/button";
 import { TiWarningOutline } from "react-icons/ti";
 import { useRouter } from "next/navigation";
+import BackButton from "../common/backButton";
 
 export default function Content() {
   const [requestOTPState, setRequestOTPState] = useState("");
@@ -170,6 +171,12 @@ export default function Content() {
           </div>
         )}
       </div>
+      {requestOTPState && 
+        <BackButton 
+          onClick={() => setRequestOTPState(false)} 
+          actionType="function"
+        />
+      }
     </div>
   )
 }
