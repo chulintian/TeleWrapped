@@ -8,6 +8,23 @@ export default function Menu() {
   const [chats, setChats] = useState([]);
   const [ingredients, setIngredients] = useState([]);
 
+  // useEffect(() => {
+  //   const session = sessionStorage.getItem("session");
+  //   if (!session) return;
+  
+  //   const handleLogout = () => {
+  //     const sessionObj = { sessionObj: session };
+  //     const blob = new Blob([JSON.stringify(sessionObj)], {
+  //       type: "application/json",
+  //     });
+  
+  //     navigator.sendBeacon("/signout", blob);
+  //   };
+  
+  //   window.addEventListener("beforeunload", handleLogout);
+  //   return () => window.removeEventListener("beforeunload", handleLogout);
+  // }, []);  
+
   function getChatName(chatInfo, type) {
     if (type=="user") {
       return chatInfo.firstName ?? chatInfo.username;
@@ -39,19 +56,19 @@ export default function Menu() {
             height={100}
             className="justify-self-center w-4/5 sm:w-1/2 md:w-1/3"
         />
-        <p className="border-y-[2px] py-1 mt-3 font-bold text-sm">
+        <p className="border-y-[2px] py-1 mt-3 font-bold ">
           Top 10 Hot Pot Set Menu
         </p>
       </div>
-      <div className="flex flex-col h-[75%] md:flex-row gap-y-4 md:gap-x-2">
+      <div className="flex flex-col h-[75%] md:flex-row gap-y-4 md:gap-x-2 overflow-y-auto">
         <div className="flex flex-col md:h-max gap-y-4 md:gap-y-2 md:w-1/2">
           {chats.slice(0,5).map((chat, index) => (
-             <Set key={index} chatName={getChatName(chat.info, chat.type)} ingredients={ingredients[index]} />
+             <Set key={index} chatName={getChatName(chat.info, chat.type)} chatId={chat.id} ingredients={ingredients[index]} />
           ))}
         </div>
         <div className="flex flex-col md:h-max gap-y-4 md:gap-y-2 md:w-1/2">
-          {chats.slice(4,9).map((chat, index) => (
-            <Set key={index} chatName={getChatName(chat.info, chat.type)} ingredients={ingredients[index+5]}/>
+          {chats.slice(5,10).map((chat, index) => (
+            <Set key={index} chatName={getChatName(chat.info, chat.type)} chatId={chat.id} ingredients={ingredients[index+5]}/>
           ))}
         </div>
       </div>

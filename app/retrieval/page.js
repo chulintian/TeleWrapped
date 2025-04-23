@@ -9,7 +9,6 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 export default function Retrieval() {
   const router = useRouter(); 
 
-  // get ingredients and chats, route aft retrieval -- to be tested
   useEffect(() => {
     Promise.all([
       fetch('/api/chat', {
@@ -37,19 +36,6 @@ export default function Retrieval() {
     .catch(error => {
       console.error("Error fetching data:", error);
     });
-  }, []);
-
-  // log out once tab is closed -- to be tested
-  useEffect(() => {
-    const session = sessionStorage.getItem("session");
-    if (!session) return;
-  
-    const handleLogout = () => {
-      navigator.sendBeacon("/logout", session);
-    };
-  
-    window.addEventListener("beforeunload", handleLogout);
-    return () => window.removeEventListener("beforeunload", handleLogout);
   }, []);
 
   return (

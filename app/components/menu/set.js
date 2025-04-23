@@ -1,13 +1,22 @@
-import Image from "next/image"
+"use client";
 
-export default function Set({
-  chatName,
-  ingredients,
-}) {
-  return(
-    <div className="border rounded-lg flex flex-row py-5 md:py-2 px-3 bg-white justify-between text-sm">
+import { useRouter } from "next/navigation";
+import { startTransition } from "react";
+import Image from "next/image";
+
+export default function Set({ chatName, chatId, ingredients }) {
+  const router = useRouter();
+
+  const handleClick = (chatId) => {
+    startTransition(() => {
+      router.push(`/soupbase?chatId=${chatId}`);
+    });
+  };
+
+  return (
+    <div className="border rounded-lg flex flex-row py-3 md:py-2 ps-3 pe-5 bg-white justify-between gap-1 h-[18%]">
       <div className="me-2 flex flex-row">
-       <Image
+        <Image
           src="/hotpot/pot.png"
           alt="hotpot"
           width={100}
@@ -16,19 +25,25 @@ export default function Set({
         />
         <div className="self-center">
           <p className="font-bold">{chatName}</p>
-          {/* <p>Comes with {ingredients[0]}, {ingredients[1]}, {ingredients[2]} and {ingredients[3]}</p> */} 
-          <p className="text-xs">Need settle loading issue first</p>
+          <p className="text-sm">
+            Comes with {ingredients[0]}, {ingredients[1]}, {ingredients[2]},{" "}
+            {ingredients[3]}, {ingredients[4]} and {ingredients[5]}
+          </p>
         </div>
       </div>
-      <div className="rounded-full p-1 aspect-square w-8 bg-[#f8a78d] h-8 flex justify-center items-center self-center">
+      <div
+        className="rounded-full aspect-square bg-[#f8a78d] flex justify-center items-center place-self-center h-full p-3 cursor-pointer"
+        onClick={() => handleClick(chatId)}
+      >
         <Image
-          src="/cart.png" 
-          alt="cart" 
-          height={100} 
-          width={100} 
-          className="w-4"
+          src="/cart.png"
+          alt="cart"
+          layout="intrinsic"
+          width={30}
+          height={30}
+          className="h-5 w-5 self-center"
         />
       </div>
     </div>
-  )
+  );
 }

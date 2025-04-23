@@ -33,7 +33,7 @@ export default function OTPInput({
   }
 
   return(
-    <div className="flex justify-center">
+    <div className="flex justify-center" onClick={handleClick}>
       <div className="flex flex-row gap-x-2 relative">
         {otp.map((digit, index) => (
           <input
@@ -42,13 +42,12 @@ export default function OTPInput({
             type="text"
             maxLength="1"
             pattern="\d"
-            className="border border-[1.5px] rounded-lg w-8 h-10 bg-white p-2 text-center focus:outline-none"
+            className="border-[1.5px] rounded-lg w-8 h-10 bg-white p-2 text-center focus:outline-none"
             value={digit}
             onChange={(e) => handleChange(index, e.target.value)}
             onKeyDown={(e) => handleBackspace(index, e)}
           />
         ))}
-        <div className="absolute top-0 bottom-0 right-0 left-0" onClick={handleClick}> </div>
       </div>
     </div>
   )

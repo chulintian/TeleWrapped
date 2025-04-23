@@ -14,6 +14,7 @@ export default function Content() {
   const [phoneNumInput, setPhoneNumInput] = useState("+65 ");
   const [otp, setOtp] = useState(() => Array(5).fill(""));
   const [resendLimit, setResendLimit] = useState(false);
+  const [otpError, setOtpError] = useState("");
 
   const router = useRouter();
   
@@ -26,6 +27,7 @@ export default function Content() {
       return;
     }
     setResendLimit(false);
+    setOtpError(""); 
     resendCount.current++;
     resetTimer();
     sessionStorage.setItem("phoneNum", phoneNumInput);
@@ -35,14 +37,21 @@ export default function Content() {
     resetTimer(); 
     sessionStorage.setItem("phoneNum", phoneNumInput);
     resendCount.current = 0; 
-    setResendLimit(false);   
+    setResendLimit(false);
+    setOtpError(""); 
   }
-  
 
   async function handleVerifyClick() {
-    const success = await verifyCode();
-    if (success) {
+    const result = await verifyCode();
+    if (result.success) {
+      setOtpError("");
       router.push("/retrieval");
+    } else {
+      setOtpError(
+        result.error === "PHONE_CODE_INVALID"
+          ? "Invalid code. Please try again."
+          : result.error || "Authentication failed."
+      );
     }
   }
 
@@ -99,18 +108,19 @@ export default function Content() {
       const data = await response.json();
   
       if (!response.ok) {
-        throw new Error(data?.error || "Verification failed");
+        return { success: false, error: data?.error || "Verification failed" };
       }
   
       sessionStorage.setItem("phoneCodeHash", data.phoneCodeHash);
       sessionStorage.setItem("session", data.session);
   
-      return true;
+      return { success: true };
     } catch (error) {
       console.error("Error verifying code:", error);
-      return false;
+      return { success: false, error: error.message || "Unknown error" };
     }
-  }  
+  }
+  
   
   return (
     <div className="absolute bottom-0 top-0 right-0 left-0 h-full flex flex-col pt-10 p-5 justify-center items-center overflow-y-hidden overflow-x-hidden">
@@ -128,8 +138,11 @@ export default function Content() {
               Your code was sent to you via Telegram.
             </p>
             <OTPInput otp={otp} setOtp={setOtp}/>
+            {otpError && (
+              <p className="italic text-xs w-full text-center text-red-900">{otpError}</p>
+            )}
             {resendLimit ? (
-              <p className="italic text-xs w-full text-center">
+              <p className="italic text-xs w-full text-center text-red-900">
                 You have reached the maximum number of resends.
               </p>
             ) : (
