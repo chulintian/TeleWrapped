@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useState, useRef } from "react"
+import { useState, useRef } from "react";
 import Image from "next/image";
 import OTPInput from "./otpInput";
 import PhoneNumInput from "./phoneNumInput";
@@ -8,6 +8,8 @@ import Button from "../common/button";
 import { TiWarningOutline } from "react-icons/ti";
 import { useRouter } from "next/navigation";
 import BackButton from "../common/backButton";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+
 
 export default function Content() {
   const [requestOTPState, setRequestOTPState] = useState("");
@@ -16,9 +18,12 @@ export default function Content() {
   const [otp, setOtp] = useState(() => Array(5).fill(""));
   const [resendLimit, setResendLimit] = useState(false);
   const [otpError, setOtpError] = useState("");
+  const [passwordRequired, setPasswordRequired] = useState(false);
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
-  
+
   const resendCount = useRef(0);
   const maxResend = 3;
 
@@ -28,18 +33,18 @@ export default function Content() {
       return;
     }
     setResendLimit(false);
-    setOtpError(""); 
+    setOtpError("");
     resendCount.current++;
     resetTimer();
     sessionStorage.setItem("phoneNum", phoneNumInput);
   }
 
   function handleRequestClick() {
-    resetTimer(); 
+    resetTimer();
     sessionStorage.setItem("phoneNum", phoneNumInput);
-    resendCount.current = 0; 
+    resendCount.current = 0;
     setResendLimit(false);
-    setOtpError(""); 
+    setOtpError("");
   }
 
   async function handleVerifyClick() {
@@ -48,18 +53,22 @@ export default function Content() {
       setOtpError("");
       router.push("/retrieval");
     } else {
-      setOtpError(
-        result.error === "PHONE_CODE_INVALID"
-          ? "Invalid code. Please try again."
-          : result.error || "Authentication failed."
-      );
+      if (result.error === "SESSION_PASSWORD_NEEDED") {
+        setPasswordRequired(true);
+      } else {
+        setOtpError(
+          result.error === "PHONE_CODE_INVALID"
+            ? "Invalid code. Please try again."
+            : result.error || "Authentication failed."
+        );
+      }
     }
   }
 
   function resetTimer() {
     setRequestOTPState(true);
     requestOTP();
-    setTimer(30); 
+    setTimer(30);
     const interval = setInterval(() => {
       setTimer((prevTimer) => {
         if (prevTimer <= 1) {
@@ -72,63 +81,62 @@ export default function Content() {
   }
 
   function requestOTP() {
-    fetch('/api/user/code', {
-      method: 'POST',
+    fetch("/api/user/code", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         phoneNum: phoneNumInput,
       }),
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         sessionStorage.setItem("phoneCodeHash", data.phoneCodeHash);
-        sessionStorage.setItem("session", data.session)
+        sessionStorage.setItem("session", data.session);
       })
-      .catch(error => {
-        console.error("Error fetching data:", error)
+      .catch((error) => {
+        console.error("Error fetching data:", error);
       });
   }
 
   async function verifyCode() {
     try {
-      const response = await fetch('/api/user/signin', {
-        method: 'POST',
+      const response = await fetch("/api/user/signin", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           sessionObj: sessionStorage.getItem("session"),
           phoneNum: sessionStorage.getItem("phoneNum"),
           phoneCodeHash: sessionStorage.getItem("phoneCodeHash"),
-          code: otp.join("")
+          code: otp.join(""),
         }),
       });
-  
+
       const data = await response.json();
-  
+
       if (!response.ok) {
         return { success: false, error: data?.error || "Verification failed" };
       }
-  
+
       sessionStorage.setItem("phoneCodeHash", data.phoneCodeHash);
       sessionStorage.setItem("session", data.session);
-  
+
       return { success: true };
     } catch (error) {
       console.error("Error verifying code:", error);
       return { success: false, error: error.message || "Unknown error" };
     }
   }
-  
-  
+
   return (
     <div className="absolute bottom-0 top-0 right-0 left-0 h-full flex flex-col pt-10 p-5 justify-center items-center overflow-y-hidden overflow-x-hidden">
       <div className="flex flex-col gap-4 p-10 w-full sm:w-3/4 md:w-2/3 lg:w-1/2">
-        <Image 
-          src="/logo.png" 
-          alt="Logo" 
+        <Image
+          src="/logo.png"
+          alt="Logo"
           width={700}
           height={300}
           className="place-self-center"
@@ -136,47 +144,92 @@ export default function Content() {
         {requestOTPState ? (
           <div className="flex flex-col space-y-4 pt-4">
             <p className="text-center">
-              Your code was sent to you via Telegram.
+              {passwordRequired
+                ? "Enter Telegram 2FA password."
+                : "Your code was sent to you via Telegram."}
             </p>
-            <OTPInput otp={otp} setOtp={setOtp}/>
-            {otpError && (
-              <p className="italic text-xs w-full text-center text-red-900">{otpError}</p>
-            )}
-            {resendLimit ? (
-              <p className="italic text-xs w-full text-center text-red-900">
-                You have reached the maximum number of resends.
-              </p>
+            {passwordRequired ? (
+              <div className="relative w-[40%] place-self-center mb-6">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="px-3 py-1 border-[1.5px] rounded-lg bg-white w-full focus:outline-0" 
+                  placeholder="2FA password"
+                />
+                <span
+                  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-600"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                </span>
+              </div>            
             ) : (
-              <button className="italic text-xs w-full text-center" onClick={handleClick} disabled={timer !=0}>
-                Did not receive?
-                <span className={`ms-1 ${timer === 0 ? "underline" : ""}`}>Resend code</span>
-                {timer !=0 && <span> in {timer}</span>}
-              </button>
+              <OTPInput otp={otp} setOtp={setOtp} />
             )}
-            <Button label="Verify" onClick={handleVerifyClick} alignmentClass="place-self-center" />
+
+            {otpError && (
+              <p className="italic text-xs w-full text-center text-red-900">
+                {otpError}
+              </p>
+            )}
+
+            {!passwordRequired &&
+              (resendLimit ? (
+                <p className="italic text-xs w-full text-center text-red-900">
+                  You have reached the maximum number of resends.
+                </p>
+              ) : (
+                <button
+                  className="italic text-xs w-full text-center"
+                  onClick={handleClick}
+                  disabled={timer !== 0}
+                >
+                  Did not receive?
+                  <span className={`ms-1 ${timer === 0 ? "underline" : ""}`}>
+                    Resend code
+                  </span>
+                  {timer !== 0 && <span> in {timer}</span>}
+                </button>
+              ))}
+
+            <Button
+              label={passwordRequired ? "Verify Password" : "Verify"}
+              onClick={handleVerifyClick}
+              alignmentClass="place-self-center"
+            />
           </div>
         ) : (
           <div className="flex flex-col space-y-4 pt-4">
             <p className="text-center">
-              Log in to use your Telegram account with <span className="font-bold">TeleWrapped</span>.
+              Log in to use your Telegram account with{" "}
+              <span className="font-bold">TeleWrapped</span>.
             </p>
-            <PhoneNumInput phoneNumInput={phoneNumInput} setPhoneNumInput={setPhoneNumInput} />
-            <Button label="Request OTP" onClick={handleRequestClick} alignmentClass="place-self-center" />
+            <PhoneNumInput
+              phoneNumInput={phoneNumInput}
+              setPhoneNumInput={setPhoneNumInput}
+            />
+            <Button
+              label="Request OTP"
+              onClick={handleRequestClick}
+              alignmentClass="place-self-center"
+            />
             <p className="text-xs mx-auto italic flex flex-row gap-x-1">
-              <TiWarningOutline size={17} className="text-end"/> 
+              <TiWarningOutline size={17} className="text-end" />
               <span>
-                Disclaimer: Your data will only be used for chat analysis and will not be retained.
+                Disclaimer: Your data will only be used for chat analysis and
+                will not be retained.
               </span>
             </p>
           </div>
         )}
       </div>
-      {requestOTPState && 
-        <BackButton 
-          onClick={() => setRequestOTPState(false)} 
+      {requestOTPState && (
+        <BackButton
+          onClick={() => setRequestOTPState(false)}
           actionType="function"
         />
-      }
+      )}
     </div>
-  )
+  );
 }

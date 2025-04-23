@@ -52,7 +52,7 @@ export default function PhoneNumInput({
 
   return (
     <div className="w-full sm:4/5 md:3/5">
-      <div className="relative flex flex-auto flex-row px-3 py-1 border border-[1.5px] rounded-lg bg-white place-self-center">
+      <div className="relative flex flex-auto flex-row px-3 py-1 border-[1.5px] rounded-lg bg-white place-self-center">
         <button
           ref={buttonRef}
           className="flex flex-row gap-1 w-25 pe-4 focus:outline-0"

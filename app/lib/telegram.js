@@ -85,6 +85,34 @@ export async function signIn(session, phoneNum, phoneCodeHash, code) {
     }
 }
 
+export async function signInWith2FA(session, phoneNumber, userPassword, code) {
+    const client = createClient(session);
+    await client.connect();
+
+    try {
+        const result  = await client.start({
+            phoneNumber: async () => phoneNumber,
+            password: async () => userPassword,
+            phoneCode: async () => code,
+            onError: (err) => {
+                console.error("Start error:", err);
+                throw err;
+            },
+        });
+        console.log(result);
+
+        const sessionString = client.session.save();
+
+        return { 
+            code: 200, 
+            content: {
+                session: sessionString
+            }
+        };
+    } catch (error) {
+        return { code: error.code, content: { error: error.errorMessage } };
+    }
+}
 
 /**
  * Log out of Telegram API session

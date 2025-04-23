@@ -6,7 +6,7 @@ export default function Prep() {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 800); // md breakpoint
+      setIsMobile(window.innerWidth <= 800); 
     };
 
     handleResize();

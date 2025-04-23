@@ -8,23 +8,6 @@ export default function Menu() {
   const [chats, setChats] = useState([]);
   const [ingredients, setIngredients] = useState([]);
 
-  // useEffect(() => {
-  //   const session = sessionStorage.getItem("session");
-  //   if (!session) return;
-  
-  //   const handleLogout = () => {
-  //     const sessionObj = { sessionObj: session };
-  //     const blob = new Blob([JSON.stringify(sessionObj)], {
-  //       type: "application/json",
-  //     });
-  
-  //     navigator.sendBeacon("/signout", blob);
-  //   };
-  
-  //   window.addEventListener("beforeunload", handleLogout);
-  //   return () => window.removeEventListener("beforeunload", handleLogout);
-  // }, []);  
-
   function getChatName(chatInfo, type) {
     if (type=="user") {
       return chatInfo.firstName ?? chatInfo.username;
