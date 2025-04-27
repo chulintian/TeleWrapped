@@ -10,7 +10,7 @@ const FlipTofu = () => {
       className="w-full h-full [perspective:1000px] cursor-pointer"
       onClick={() => setIsFlipped(!isFlipped)}
     >
-      <div className={`relative w-full h-full transition-all duration-500 [transform-style:preserve-3d] ${
+      <div className={`relative w-full h-full  transition-all duration-500 [transform-style:preserve-3d] ${
         isFlipped ? "[transform:rotateY(180deg)]" : ""
       }`}>
         <div className="absolute w-full h-full [backface-visibility:hidden]">
