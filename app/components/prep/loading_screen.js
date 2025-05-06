@@ -15,12 +15,8 @@ export default function Prep() {
   }, []);
 
   return (
-    <div className="flex items-center justify-center h-screen max-h-screen overflow-hidden">
-      <div
-        className={`relative w-[80%] max-h-[90vh] ${
-          isMobile ? "aspect-[9/16]" : "aspect-video"
-        }`}
-      >
+    <div className="flex items-center justify-center overflow-hidden lg:w-[60%] md:w-[80%] md:h-auto h-[80%] w-auto">
+      <div className="relative w-full">
         <video
           src={
             isMobile
@@ -32,7 +28,7 @@ export default function Prep() {
           loop
           muted
           controls={false}
-          className=" w-full h-full object-cover object-center"
+          className="w-full object-cover"
         />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4">
           <DotLottieReact
@@ -40,6 +36,9 @@ export default function Prep() {
             loop
             autoplay
           />
+        </div>
+        <div className="absolute border-4 top-0 left-0 right-0 bottom-0 border-[#efe7dc]">
+
         </div>
       </div>
     </div>
