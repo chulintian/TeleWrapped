@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 
-const FlipEnoki = () => {
+const FlipTomato = () => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   return (
@@ -10,12 +10,12 @@ const FlipEnoki = () => {
       className="w-full h-full [perspective:1000px] cursor-pointer"
       onClick={() => setIsFlipped(!isFlipped)}
     >
-      <div className={`relative w-full h-full transition-all duration-500 [transform-style:preserve-3d] ${
+      <div className={`relative w-full h-full  transition-all duration-500 [transform-style:preserve-3d] ${
         isFlipped ? "[transform:rotateY(180deg)]" : ""
       }`}>
         <div className="absolute w-full h-full [backface-visibility:hidden]">
           <Image
-            src="/ingredients/compatibility/shiitakeOnPlate.png"
+            src="/ingredients/numOfMessages/tomatoOnPlate.png"
             alt="Front"
             fill
             className={`object-contain rounded-lg transition-all duration-500 ${
@@ -41,8 +41,8 @@ const FlipEnoki = () => {
                 border-1
               border-black
               ">
-                <span className="text-lg font-bold">Vibe Check</span>
-                <span className="text-xs/5 px-4 font-stretch-extra-condensed tracking-tight text-center">Hold on to your hats, because this duo is a comedy show! Every chat is full of wild randomness and so much laughter its hard to keep up. No serious convos allowed!. With more HAHA’s than words. This friendship’s got you covered for a fun time</span>
+                <span className="text-sm font-bold text-center">Total number of messages in chat</span>
+                <span className="text-xl px-4 font-extrabold text-center">~120K</span>
               </div>
             </div>
           </div>
@@ -52,4 +52,4 @@ const FlipEnoki = () => {
   );
 };
 
-export default FlipEnoki;
+export default FlipTomato;

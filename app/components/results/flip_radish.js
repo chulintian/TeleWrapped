@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 
-const FlipEnoki = () => {
+const FlipRadish = () => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   return (
@@ -15,7 +15,7 @@ const FlipEnoki = () => {
       }`}>
         <div className="absolute w-full h-full [backface-visibility:hidden]">
           <Image
-            src="/ingredients/compatibility/shiitakeOnPlate.png"
+            src="/ingredients/vibeCheck/radishOnPlate.png"
             alt="Front"
             fill
             className={`object-contain rounded-lg transition-all duration-500 ${
@@ -32,7 +32,7 @@ const FlipEnoki = () => {
                 aspect-square 
                 h-[90%]
                 rounded-full 
-                bg-[#a7d7e6]
+                bg-[#eab05d]
                 flex flex-col 
                 justify-center 
                 items-center 
@@ -41,7 +41,7 @@ const FlipEnoki = () => {
                 border-1
               border-black
               ">
-                <span className="text-lg font-bold">Vibe Check</span>
+                <span className="text-lg font-bold">Attachment Style</span>
                 <span className="text-xs/5 px-4 font-stretch-extra-condensed tracking-tight text-center">Hold on to your hats, because this duo is a comedy show! Every chat is full of wild randomness and so much laughter its hard to keep up. No serious convos allowed!. With more HAHA’s than words. This friendship’s got you covered for a fun time</span>
               </div>
             </div>
@@ -52,4 +52,4 @@ const FlipEnoki = () => {
   );
 };
 
-export default FlipEnoki;
+export default FlipRadish;
