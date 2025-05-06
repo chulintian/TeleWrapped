@@ -49,6 +49,43 @@ export async function getCode(phoneNum) {
     }
 }
 
+/**
+ * Check if user has 2FA enabled on their Telegram account
+ * @param {*} session Telegram API session
+ * @returns Telegram API session & 2FA status
+ */
+export async function checkIfHave2FA(session) {
+    const client = createClient(session);
+    
+    await client.connect();
+
+    try {
+        const result = await client.invoke(new Api.account.GetPassword({}));
+
+        if (result) {
+            return { 
+                code: 200, 
+                content: {
+                    session: sessionString,
+                    haveTwoFA: true
+                }
+            };
+        }
+
+    } catch (error) {
+        if (error.errorMessage == "AUTH_KEY_UNREGISTERED") {
+            return { 
+                code: 200, 
+                content: {
+                    session: sessionString,
+                    haveTwoFA: false
+                }
+            };
+        }
+        return { code: error.code, content: { error: error.errorMessage } };
+    }
+}
+
 
 /**
  * Sign in to user's Telegram account
@@ -58,7 +95,7 @@ export async function getCode(phoneNum) {
  * @param {*} code OTP sent to User's Telegram account
  * @returns Telegram API session
  */
-export async function signIn(session, phoneNum, phoneCodeHash, code) {
+export async function signIn(session, phoneNum, phoneCodeHash, code, userPassword) {
     const client = createClient(session);
 
     await client.connect();
@@ -81,25 +118,31 @@ export async function signIn(session, phoneNum, phoneCodeHash, code) {
             }
         };
     } catch (error) {
+        // if (error.errorMessage === "SESSION_PASSWORD_NEEDED") {
+        //     const pwInfo = await client.invoke(new Api.account.GetPassword());
+        //     console.log(pwInfo);
+    
+        //     await client.invoke(new Api.auth.CheckPassword({ password: userPassword }));
+
+        //   } else {
+        //     throw error;
+        // }
         return { code: error.code, content: { error: error.errorMessage } };
     }
 }
 
-export async function signInWith2FA(session, phoneNumber, userPassword, code) {
+export async function signInWith2FA(session, phoneNum, phoneCodeHash, code, userPassword) {
     const client = createClient(session);
+
     await client.connect();
 
     try {
-        const result  = await client.start({
-            phoneNumber: async () => phoneNumber,
+        const result = await client.start({
+            phoneNumber: async () => phoneNum,
             password: async () => userPassword,
             phoneCode: async () => code,
-            onError: (err) => {
-                console.error("Start error:", err);
-                throw err;
-            },
+            onError: (err) => console.log(err),
         });
-        console.log(result);
 
         const sessionString = client.session.save();
 

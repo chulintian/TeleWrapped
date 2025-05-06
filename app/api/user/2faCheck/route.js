@@ -1,9 +1,9 @@
-import { signInWith2FA } from "../../../lib/telegram"
+import { checkIfHave2FA } from "../../../lib/telegram"
 
 export async function POST(request) {
     const body = await request.json();
-    const { sessionObj, phoneNumber, userPassword, code} = body;
-    const result = await signInWith2FA (sessionObj, phoneNumber, userPassword, code);
+    const { sessionObj} = body;
+    const result = await checkIfHave2FA (sessionObj);
 
     return new Response(JSON.stringify(result.content), {
         status: result.code,
