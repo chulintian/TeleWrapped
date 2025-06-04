@@ -58,9 +58,13 @@ const FlipMeat = ({results}) => {
                 <div className="text-left text-xs lg:text-sm">
                   {results.users?.map((user, index) => (
                     user.redFlags.map((redFlag, i) => (
-                      <div key={`${index}-${i}`} className="pt-2">
-                        <span className="underline">{user.username}: {redFlag.flag}</span>
-                        <p>{redFlag.reasoning}</p>
+                      <div key={`${index}-${i}`} className={results.users.length <= 2 ? "pt-2" : ""}>
+                        <span className={results.users.length <= 2 ? "underline" : ""}>
+                          {user.username}: {redFlag.flag}
+                        </span>
+                        {results.users.length <= 2 && (
+                          <p>{redFlag.reasoning}</p>
+                        )}
                       </div>
                     ))
                   ))}

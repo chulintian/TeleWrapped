@@ -56,14 +56,18 @@ const FlipBokchoy = ({results}) => {
               >
                 <span className="text-lg font-bold">Green Flags</span>
                 <div className="text-left text-xs lg:text-sm">
-                  {results.users?.map((user, index) => (
-                    user.greenFlags.map((greenFlag, i) => (
-                      <div key={`${index}-${i}`} className="pt-2">
-                        <span className="underline">{user.username}: {greenFlag.flag}</span>
+                {results.users?.map((user, index) => (
+                  user.greenFlags.map((greenFlag, i) => (
+                    <div key={`${index}-${i}`} className={results.users.length <= 2 ? "pt-2" : ""}>
+                      <span className={results.users.length <= 2 ? "underline" : ""}>
+                        {user.username}: {greenFlag.flag}
+                      </span>
+                      {results.users.length <= 2 && (
                         <p>{greenFlag.reasoning}</p>
-                      </div>
-                    ))
-                  ))}
+                      )}
+                    </div>
+                  ))
+                ))}
                 </div>
               </div>
             </div>

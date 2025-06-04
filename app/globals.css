@@ -43,21 +43,21 @@
 }
 
 .bg-blue-custom {
-  background-color: rgba(167, 215, 230, 0.5); /* rgb of #a7d7e6 with 50% opacity */
+  background-color: rgb(203, 223, 225); /* #cbdfe1 */
 }
 
 .bg-orange-custom {
-  background-color: rgba(248, 167, 141, 0.5);
+  background-color: rgb(243, 199, 181); /* #f3c7b5 */
 }
 
 .bg-green-custom {
-  background-color: rgba(66, 168, 94, 0.5);
+  background-color: rgb(152, 199, 157); /* #98c79d */
 }
 
 .bg-yellow-custom {
-  background-color: rgba(234, 176, 93, 0.5);
+  background-color: rgb(236, 203, 157); /* #eccb9d */
 }
 
 .bg-red-custom {
-  background-color: rgba(231, 108, 123, 0.5);
+  background-color: rgb(247, 165, 146); /* #f7a592 */
 }

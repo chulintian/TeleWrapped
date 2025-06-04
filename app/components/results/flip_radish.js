@@ -48,14 +48,20 @@ const FlipRadish = ({results}) => {
               border-black
               ">
                 <span className="text-lg font-bold">Attachment Style</span>
-                {results.users?.map((user, index) => (
-                  user.attachmentStyle.map((attachment, i) => (
-                    <div key={`${index}-${i}`} className="text-xs lg:text-sm px-4 pt-2 text-center">
-                      <span className="underline">{user.username}: {attachment.style}</span>
-                      <p>{attachment.reasoning}</p>
-                    </div>
-                  ))
-                ))}
+                <div className="text-center text-xs lg:text-sm">
+                  {results.users?.map((user, index) => (
+                    user.attachmentStyle.map((attachment, i) => (
+                      <div key={`${index}-${i}`} className={results.users.length <= 2 ? "pt-2" : ""}>
+                        <span className={results.users.length <= 2 ? "underline" : ""}>
+                          {user.username}: {attachment.style}
+                        </span>
+                        {results.users.length <= 2 && (
+                          <p>{attachment.reasoning}</p>
+                        )}
+                      </div>
+                    ))
+                  ))}
+                </div>
               </div>
             </div>
           </div>
