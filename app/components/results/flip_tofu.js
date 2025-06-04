@@ -2,13 +2,19 @@
 import { useState } from "react";
 import Image from "next/image";
 
-const FlipTofu = () => {
+const FlipTofu = ({results}) => {
   const [isFlipped, setIsFlipped] = useState(false);
+
+  const handleClick = () => {
+    if (!isFlipped) {
+      setIsFlipped(true);
+    }
+  };
 
   return (
     <div 
       className="w-full h-full [perspective:1000px] cursor-pointer"
-      onClick={() => setIsFlipped(!isFlipped)}
+      onClick={handleClick}
     >
       <div className={`relative w-full h-full  transition-all duration-500 [transform-style:preserve-3d] ${
         isFlipped ? "[transform:rotateY(180deg)]" : ""
@@ -32,24 +38,24 @@ const FlipTofu = () => {
                 aspect-square 
                 h-[90%]
                 rounded-full 
-                bg-[#f8a78d]
+                bg-orange-custom
                 flex flex-col 
                 justify-center 
                 items-center 
                 text-black
                 shadow-lg
                 border-1
-              border-black
+                border-black
               ">
                 <span className="text-lg font-bold">Compatibility</span>
-                <span className="text-xl px-4 font-extrabold text-center">90%</span>
+                <span className="text-3xl px-4 pt-1 text-center">{results}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
+  ); 
 };
 
 export default FlipTofu;

@@ -41,3 +41,23 @@
   animation: wiggle 1s ease-in-out infinite;
   transform-origin: center
 }
+
+.bg-blue-custom {
+  background-color: rgba(167, 215, 230, 0.5); /* rgb of #a7d7e6 with 50% opacity */
+}
+
+.bg-orange-custom {
+  background-color: rgba(248, 167, 141, 0.5);
+}
+
+.bg-green-custom {
+  background-color: rgba(66, 168, 94, 0.5);
+}
+
+.bg-yellow-custom {
+  background-color: rgba(234, 176, 93, 0.5);
+}
+
+.bg-red-custom {
+  background-color: rgba(231, 108, 123, 0.5);
+}

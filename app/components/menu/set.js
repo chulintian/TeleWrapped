@@ -4,10 +4,11 @@ import { useRouter } from "next/navigation";
 import { startTransition } from "react";
 import Image from "next/image";
 
-export default function Set({ chatName, chatId, ingredients }) {
+export default function Set({ chatName, chatId, totalMessages, ingredients }) {
   const router = useRouter();
 
   const handleClick = (chatId) => {
+    sessionStorage.setItem("totalMessages", JSON.stringify(totalMessages));
     startTransition(() => {
       router.push(`/soupbase?chatId=${chatId}`);
     });

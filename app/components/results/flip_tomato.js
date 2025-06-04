@@ -2,13 +2,19 @@
 import { useState } from "react";
 import Image from "next/image";
 
-const FlipTomato = () => {
+const FlipTomato = ({totalMessages}) => {
   const [isFlipped, setIsFlipped] = useState(false);
+
+  const handleClick = () => {
+    if (!isFlipped) {
+      setIsFlipped(true);
+    }
+  };
 
   return (
     <div 
       className="w-full h-full [perspective:1000px] cursor-pointer"
-      onClick={() => setIsFlipped(!isFlipped)}
+      onClick={handleClick}
     >
       <div className={`relative w-full h-full  transition-all duration-500 [transform-style:preserve-3d] ${
         isFlipped ? "[transform:rotateY(180deg)]" : ""
@@ -32,7 +38,7 @@ const FlipTomato = () => {
                 aspect-square 
                 h-[90%]
                 rounded-full 
-                bg-[#a7d7e6]
+                bg-blue-custom
                 flex flex-col 
                 justify-center 
                 items-center 
@@ -41,8 +47,8 @@ const FlipTomato = () => {
                 border-1
               border-black
               ">
-                <span className="text-sm font-bold text-center">Total number of messages in chat</span>
-                <span className="text-xl px-4 font-extrabold text-center">~120K</span>
+                <span className="text-lg font-bold text-center">Message <br /> Count</span>
+                <span className="text-2xl px-4 pt-1 text-center">{totalMessages}</span>
               </div>
             </div>
           </div>

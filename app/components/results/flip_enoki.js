@@ -2,13 +2,19 @@
 import { useState } from "react";
 import Image from "next/image";
 
-const FlipEnoki = () => {
+const FlipEnoki = ({results}) => {
   const [isFlipped, setIsFlipped] = useState(false);
+
+  const handleClick = () => {
+    if (!isFlipped) {
+      setIsFlipped(true);
+    }
+  };
 
   return (
     <div 
       className="w-full h-full [perspective:1000px] cursor-pointer"
-      onClick={() => setIsFlipped(!isFlipped)}
+      onClick={handleClick}
     >
       <div className={`relative w-full h-full transition-all duration-500 [transform-style:preserve-3d] ${
         isFlipped ? "[transform:rotateY(180deg)]" : ""
@@ -32,7 +38,7 @@ const FlipEnoki = () => {
                 aspect-square 
                 h-[90%]
                 rounded-full 
-                bg-[#a7d7e6]
+                bg-blue-custom
                 flex flex-col 
                 justify-center 
                 items-center 
@@ -42,7 +48,7 @@ const FlipEnoki = () => {
               border-black
               ">
                 <span className="text-lg font-bold">Vibe Check</span>
-                <span className="text-xs/5 px-4 font-stretch-extra-condensed tracking-tight text-center">Hold on to your hats, because this duo is a comedy show! Every chat is full of wild randomness and so much laughter its hard to keep up. No serious convos allowed!. With more HAHA’s than words. This friendship’s got you covered for a fun time</span>
+                <span className="text-xs lg:text-sm px-4 text-center">{results}</span>
               </div>
             </div>
           </div>

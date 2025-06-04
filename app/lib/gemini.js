@@ -5,84 +5,75 @@ const systemPrompt = `
 
     Give examples to explain reasoning behind criteria. If an example is necessary, make sure there is enough context to understand the example.
 
-    Analyze the conversation based on the following criteria:
+    Analyze the conversation based on the following criteria, especially the important ones:
 
-    - **Vibe Check (Percentage):** Assess the overall tone and sentiment of the conversation. (it should be a short few sentences)
+    - **Vibe Check:** Assess the overall tone and sentiment of the conversation.
     - **Compatibility:** Evaluate the compatibility between participants based on communication patterns.
-    - **Attachment Styles:** Identify potential attachment styles based on message content and interaction dynamics. (Secure, Anxious, Avoidant, and Disorganized)
-    - **Green Flags:** Highlight positive communication patterns or behaviors.
-    - **Red Flags:** Identify concerning behaviors or communication patterns.
+    - **Attachment Styles:** Identify potential attachment styles based on message content and interaction dynamics. (Secure, Anxious, Avoidant, and Disorganized) 
+    - **Green Flags:** Highlight positive communication patterns or behaviors. (important: max 1 flag per user)
+    - **Red Flags:** Identify concerning behaviors or communication patterns. (important: max 1 flag per user)
 
     Ensure that your response follows this JSON structure exactly.
 
     {
-        "vibeCheck": "The vibe is off the charts this time! You and your chat buddy are completely in sync, making every conversation feel like a breeze. No awkward pauses, just smooth and easy chatting with lots of laughs. Keep that energy flowing, you two are killing it!",
-        "compatibility": {
-            "percentage": "85%",
-            "reasoning": "You and your chat buddy are pretty much twins when it comes to communication. Conversations are effortlessly balanced, with both of you bringing in your own good energy. It's like you're reading each other's minds, and it shows! 10/10 for compatibility!"
-        },
+        "vibeCheck": "This chat flows with ease—thoughtful exchanges, laughter, comfort, and shared energy. Both are present, engaged, and clearly enjoying the connection naturally.",
+        "compatibility": "85%",
         "users": [
             {
-                "username": "johndoe",
-                "attachmentStyle": [
-                    {
-                        "style": "Secure",
-                        "reasoning": "John’s got a solid, no-nonsense vibe. He’s calm, cool, and collected—ready to handle anything without breaking a sweat. Conversations with him are straightforward, with zero drama. Nice and chill."
-                    }
-                ],
-                "greenFlags": [
-                    {
-                        "flag": "Rapid Fire Replies",
-                        "reasoning": "John doesn't leave you hanging—quick responses keep the convo going at full speed."
-                    },
-                    {
-                        "flag": "Supportive Vibes",
-                        "reasoning": "Whenever you’re doubting yourself, John’s there with a ‘You’ve got this!’ He’s all about lifting you up with good energy. Like when you mentioned feeling down about your workout routine, and he said, “You’ve already made progress, keep going!"
-                    }
-                ],
-                "redFlags": [
-                    {
-                        "flag": "A Dash of Sarcasm",
-                        "reasoning": "Sometimes John’s sarcasm is a little too much. For instance, when you were talking about your favorite hobby and he replied with, “Oh, that’s definitely the most original thing I’ve heard all day!” It wasn’t the worst, but a little less spice would have been nice"
-                    },
-                    {
-                        "flag": "Dodging Deep Talks",
-                        "reasoning": "When the convo goes deep, John pulls back. You tried to get into that serious chat about how you both handle stress, but John kept things light, shifting to something like, “But hey, at least we can always joke about it!” He’s more about keeping it casual—don’t expect too many heart-to-hearts from him!"
-                    }
-                ]
+            "username": "johndoe",
+            "attachmentStyle": [
+                {
+                "style": "Secure",
+                "reasoning": "Confident, relaxed, not needy, emotionally steady."
+                }
+            ],
+            "greenFlags": [
+                {
+                "flag": "Rapid Fire Replies",
+                "reasoning": "Quick replies show high engagement and consistent effort."
+                }
+            ],
+            "redFlags": [
+                {
+                "flag": "A Dash of Sarcasm",
+                "reasoning": "Jokes sometimes misread, creating slight discomfort occasionally."
+                }
+            ]
             },
             {
-                "username": "janesmith",
-                "attachmentStyle": [
-                    {
-                        "style": "Anxious",
-                        "reasoning": "Jane’s a bit of a worrywart, always double-checking to make sure everything’s okay. Like that time you didn’t reply for a few minutes, and she asked, “Is everything alright?” She might need a little reassurance here and there, but it just means she cares a lot."
-                    }
-                ],
-                "greenFlags": [
-                    {
-                        "flag": "Crystal Clear Communication",
-                        "reasoning": "No beating around the bush with Jane—she’s straightforward and gets her point across clearly. Love the clarity!"
-                    },
-                    {
-                        "flag": "Curiosity Overload ",
-                        "reasoning": "Jane’s always digging deeper, asking questions and wanting to know more. Remember when you casually mentioned your travel plans, and she immediately fired back with, “What’s your dream destination? I want all the details!” Her curiosity makes every conversation feel like an exciting discovery.
-"
-                    }
-                ],
-                "redFlags": [
-                    {
-                        "flag": "Overthinking Everything ",
-                        "reasoning": "Jane tends to overanalyze stuff a bit too much. You know that time when you were joking about your favorite ice cream flavor, and she was like, “But what does it say about me that I like it? Is it because I’m impulsive or…?” Sometimes her mind races, and it can make things feel a little stressful."
-                    },
-                    {
-                        "flag": "Clingy Alert ",
-                        "reasoning": "Jane loves reassurance—she can get a bit needy when it comes to validation. After telling her about your day, she replied, “So, did I say the right thing? Do you agree with me?” Don’t be surprised if she asks ‘Are you sure?’ a few extra times."
-                    }
-                ]
+            "username": "janesmith",
+            "attachmentStyle": [
+                {
+                "style": "Anxious",
+                "reasoning": "Often overthinks and needs extra reassurance."
+                }
+            ],
+            "greenFlags": [
+                {
+                "flag": "Crystal Clear Communication",
+                "reasoning": "She’s always clear, open, and very direct."
+                }
+            ],
+            "redFlags": [
+                {
+                "flag": "Overthinking Everything",
+                "reasoning": "Overanalyzes messages, adding tension without real cause."
+                }
+            ]
             }
         ]
     }
+    
+    Each section must contain exactly the specified number of words.
+    Do not exceed or go below the word count.
+    Use concise, playful language that fits the tone, but respect the limits strictly:
+
+    - vibeCheck: Exactly 25 words
+    - attachmentStyle.reasoning: Exactly 7 words
+    - greenFlags.reasoning: Exactly 15 words
+    - redFlags.reasoning: Exactly 15 words
+
+    Any reasoning with more or fewer words will be considered invalid.
 `;
 
 const returnSchema = {
@@ -93,18 +84,8 @@ const returnSchema = {
             "description": "A summary of the vibe between the users"
         },
         "compatibility": {
-            "type": "object",
-            "properties": {
-                "percentage": {
-                    "type": "string",
-                    "description": "Compatibility percentage between the users"
-                },
-                "reasoning": {
-                    "type": "string",
-                    "description": "Reasoning behind the compatibility score"
-                }
-            },
-            "required": ["percentage", "reasoning"]
+            "type": "string",
+            "description": "A percentage indicating the compatibility between the users"
         },
         "users": {
             "type": "array",

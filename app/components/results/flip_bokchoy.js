@@ -2,13 +2,19 @@
 import { useState } from "react";
 import Image from "next/image";
 
-const FlipBokchoy = () => {
+const FlipBokchoy = ({results}) => {
   const [isFlipped, setIsFlipped] = useState(false);
+
+  const handleClick = () => {
+    if (!isFlipped) {
+      setIsFlipped(true);
+    }
+  };
 
   return (
     <div
       className="w-full h-full [perspective:1000px] cursor-pointer"
-      onClick={() => setIsFlipped(!isFlipped)}
+      onClick={handleClick}
     >
       <div
         className={`relative w-full h-full transition-all flex justify-around items-center duration-500 [transform-style:preserve-3d] ${
@@ -37,7 +43,7 @@ const FlipBokchoy = () => {
                 rounded-lg
                 h-[90%]
                 aspect-[5/3]
-                bg-[#42a85e]
+                bg-green-custom
                 flex flex-col 
                 justify-center 
                 items-center 
@@ -45,12 +51,20 @@ const FlipBokchoy = () => {
                 shadow-lg
                 border-1
               border-black
+                p-4
               "
               >
                 <span className="text-lg font-bold">Green Flags</span>
-                <span className="text-xs text-center px-2">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare tempus lacus et fringilla. Nulla eu nulla vitae tortor ultrices bibendum. Suspendisse aliquam neque vitae laoreet vestibulum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur scelerisque fermentum turpis, id commodo nulla.
-                </span>
+                <div className="text-left text-xs lg:text-sm">
+                  {results.users?.map((user, index) => (
+                    user.greenFlags.map((greenFlag, i) => (
+                      <div key={`${index}-${i}`} className="pt-2">
+                        <span className="underline">{user.username}: {greenFlag.flag}</span>
+                        <p>{greenFlag.reasoning}</p>
+                      </div>
+                    ))
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -59,5 +73,4 @@ const FlipBokchoy = () => {
     </div>
   );
 };
-
 export default FlipBokchoy;
