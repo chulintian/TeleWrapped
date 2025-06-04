@@ -9,6 +9,7 @@ export default function Set({ chatName, chatId, chatType, totalMessages, ingredi
 
   const handleClick = (chatId, chatType) => {
     sessionStorage.setItem("totalMessages", JSON.stringify(totalMessages));
+    sessionStorage.setItem("ingredients", JSON.stringify(ingredients));
     startTransition(() => {
       router.push(`/soupbase?chatId=${chatId}&chatType=${chatType}`);
     });

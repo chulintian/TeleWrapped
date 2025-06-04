@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 
-const FlipTofu = ({results}) => {
+const Compatibility = ({results, path}) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleClick = () => {
@@ -21,7 +21,7 @@ const FlipTofu = ({results}) => {
       }`}>
         <div className="absolute w-full h-full [backface-visibility:hidden]">
           <Image
-            src="/ingredients/attachmentStyle/tofuOnPlate.png"
+            src={path}
             alt="Front"
             fill
             className={`object-contain rounded-lg transition-all duration-500 ${
@@ -58,4 +58,4 @@ const FlipTofu = ({results}) => {
   ); 
 };
 
-export default FlipTofu;
+export default Compatibility;

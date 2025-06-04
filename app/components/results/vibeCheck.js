@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 
-const FlipEnoki = ({results}) => {
+const VibeCheck = ({results, path}) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleClick = () => {
@@ -21,7 +21,7 @@ const FlipEnoki = ({results}) => {
       }`}>
         <div className="absolute w-full h-full [backface-visibility:hidden]">
           <Image
-            src="/ingredients/compatibility/shiitakeOnPlate.png"
+            src={path}
             alt="Front"
             fill
             className={`object-contain rounded-lg transition-all duration-500 ${
@@ -58,4 +58,4 @@ const FlipEnoki = ({results}) => {
   );
 };
 
-export default FlipEnoki;
+export default VibeCheck;

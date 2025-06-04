@@ -2,12 +2,12 @@
 
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
-import FlipEnoki from "../components/results/flip_enoki";
-import FlipTofu from "../components/results/flip_tofu";
-import FlipMeat from "../components/results/flip_meat";
-import FlipRadish from "../components/results/flip_radish";
-import FlipBokchoy from "../components/results/flip_bokchoy";
-import FlipTomato from "../components/results/flip_tomato";
+import VibeCheck from "../components/results/vibeCheck";
+import Compatibility from "../components/results/compatibility";
+import RedFlags from "../components/results/redFlags";
+import AttachmentStyle from "../components/results/attachmentStyle";
+import GreenFlags from "../components/results/greenFlags";
+import MsgCount from "../components/results/msgCount";
 import Button from "../components/common/button";
 import { IoShareSocialOutline } from "react-icons/io5";
 import html2canvas from "html2canvas";
@@ -17,14 +17,47 @@ export default function Results() {
 
   const [results, setResults] = useState({});
   const [totalMessages, setTotalMessages] = useState("");
+  const [ingredients, setIngredients] = useState([]);
+  const [totalNumOfMsg, setTotalNumOfMsg] = useState();
   const captureRef = useRef(null);
+
+  const ingredientDict = {
+    // greenFlag
+    "bokchoy": "/ingredients/greenFlag/bokchoyOnPlate.png",
+    "broccoli": "/ingredients/greenFlag/broccoliOnPlate.png",
+    "leek": "/ingredients/greenFlag/leekOnPlate.png",
+  
+    // numOfMessages
+    "tomato": "/ingredients/numOfMessages/tomatoOnPlate.png",
+    "corn": "/ingredients/numOfMessages/cornOnPlate.png",
+    "carrot": "/ingredients/numOfMessages/carrotOnPlate.png",
+  
+    // redFlag
+    "crab": "/ingredients/redFlag/crabOnPlate.png",
+    "meat": "/ingredients/redFlag/meatOnPlate.png",
+    "prawn": "/ingredients/redFlag/prawnOnPlate.png",
+  
+    // compatibility
+    "enoki": "/ingredients/compatibility/enokiOnPlate.png",
+    "shiitake": "/ingredients/compatibility/shiitakeOnPlate.png",
+  
+    // attachmentStyle
+    "fishcake": "/ingredients/attachmentStyle/fishcakeOnPlate.png",
+    "tofu": "/ingredients/attachmentStyle/tofuOnPlate.png",
+  
+    // vibeCheck
+    "egg": "/ingredients/vibeCheck/eggOnPlate.png",
+    "radish": "/ingredients/vibeCheck/radishOnPlate.png",
+    "noodle": "/ingredients/vibeCheck/noodleOnPlate.png"
+  };
 
   useEffect(() => {
     try {
       const storedResults = JSON.parse(sessionStorage.getItem("results"));
       if (storedResults?.analysis) {
         setResults(storedResults.analysis);
-        console.log("Results from sessionStorage:", storedResults.analysis);
+        console.log(storedResults.msgCount);
+        setTotalNumOfMsg(storedResults.msgCount)
       }
     } catch (error) {
       console.error("Error parsing data from sessionStorage", error);
@@ -35,6 +68,8 @@ export default function Results() {
   useEffect(() => {
     const storedTotalMessages = JSON.parse(sessionStorage.getItem("totalMessages"));
     setTotalMessages(storedTotalMessages || "");
+    const storedIngredients = JSON.parse(sessionStorage.getItem("ingredients"));
+    setIngredients(storedIngredients || []);
   }, []);
 
   const handleClick = async () => {
@@ -97,6 +132,38 @@ export default function Results() {
                 />
               </div>
               <div className="flex justify-center items-center h-32 w-32 lg:w-56 lg:h-30 relative overflow-visible">
+                {/* <div className="absolute top-0 left-0 w-full h-full grid grid-rows-3 grid-cols-5 gap-px z-10">
+                  {Array.from({ length: 15 }).map((_, index) => {
+                    const col = (index % 5) + 1;
+                    const row = Math.floor(index / 5) + 1;
+
+                    const imageMap = {
+                      '1,2': '/path/to/image1.png',
+                      '2,3': '/path/to/image2.png',
+                      '3,1': '/path/to/image3.png',
+                      '3,2': '/path/to/image4.png',
+                      '4,3': '/path/to/image5.png',
+                      '5,2': '/path/to/image6.png',
+                    };
+
+                    const key = `${col},${row}`;
+                    const imgSrc = imageMap[key];
+
+                    return (
+                      <div key={index} className="relative border border-white/30">
+                        {imgSrc && (
+                          <Image
+                            src={imgSrc}
+                            alt={`Overlay image at ${col},${row}`}
+                            className="w-full h-full object-contain"
+                            fill
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>  */}
+                
                 <Image
                   src="/hotpot/utensils.png"
                   alt="Image of utensils"
@@ -108,28 +175,40 @@ export default function Results() {
             <div className="flex flex-col w-full justify-center items-center lg:order-1 transform xl:translate-x-[7%] 2xl:translate-x-[20%] -translate-y-[20%] lg:translate-y-[0%]">
               <div className="flex flex-col lg:flex-row w-full justify-center items-center ">
                 <div className="flex justify-around items-center h-56 aspect-[1] lg:h-64 ">
-                  <FlipEnoki results={results.vibeCheck || ""} />
+                  {ingredientDict[ingredients[3]] ? (
+                    <Compatibility results={results.vibeCheck || ""} path={ingredientDict[ingredients[3]]} />
+                  ) : null}
                 </div>
                 <div className="flex justify-around items-center h-40 aspect-[1] lg:h-40 ">
-                  <FlipTofu results={results.compatibility || ""} />
+                  {ingredientDict[ingredients[4]] ? (
+                    <AttachmentStyle results={results.compatibility || ""} path={ingredientDict[ingredients[4]]} />
+                  ) : null}
                 </div>
               </div>
               <div className="flex justify-around items-center h-48 aspect-[1] lg:h-64 ">
-                <FlipBokchoy results={results} />
+                {ingredientDict[ingredients[0]] ? (
+                  <GreenFlags results={results} path={ingredientDict[ingredients[0]]} />
+                ) : null}
               </div>
             </div>
             <div className="flex flex-col w-full justify-center items-center transform xl:-translate-x-[10%] 2xl:-translate-x-[23%] -translate-y-[15%] lg:translate-y-[0%] lg:order-3">
               <div className="flex flex-col lg:flex-row w-full justify-center items-center lg:order-2 ">
-                <div className="flex justify-around items-center h-56 aspect-[1] lg:h-64">
-                  <FlipRadish results={results} />
-                </div>
+                {/* <div className="flex justify-around items-center h-56 aspect-[1] lg:h-64">
+                  {ingredientDict[ingredients[5]] ? (
+                    <VibeCheck results={results} path={ingredientDict[ingredients[5]]} />
+                  ) : null}
+                </div> */}
                 <div className="flex justify-around items-center h-40 aspect-[1] lg:h-40">
-                <FlipTomato totalMessages={totalMessages} />
-              </div>
-              </div>
-                <div className="flex justify-around items-center h-48 aspect-[1] lg:h-64 ">
-                  <FlipMeat results={results} />
+                  {ingredientDict[ingredients[1]] ? (
+                    <MsgCount totalMessages={totalNumOfMsg} path={ingredientDict[ingredients[1]]} />
+                  ) : null}
                 </div>
+              </div>
+              <div className="flex justify-around items-center h-48 aspect-[1] lg:h-64 ">
+                {ingredientDict[ingredients[2]] ? (
+                  <RedFlags results={results} path={ingredientDict[ingredients[2]]} />
+                ) : null}
+              </div>
             </div>
           </div>
         </div>

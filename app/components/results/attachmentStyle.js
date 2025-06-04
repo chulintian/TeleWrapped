@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 
-const FlipRadish = ({results}) => {
+const AttachmentStyle = ({results, path}) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleClick = () => {
@@ -21,7 +21,7 @@ const FlipRadish = ({results}) => {
       }`}>
         <div className="absolute w-full h-full [backface-visibility:hidden]">
           <Image
-            src="/ingredients/vibeCheck/radishOnPlate.png"
+            src={path}
             alt="Front"
             fill
             className={`object-contain rounded-lg transition-all duration-500 ${
@@ -71,4 +71,4 @@ const FlipRadish = ({results}) => {
   );
 };
 
-export default FlipRadish;
+export default AttachmentStyle;

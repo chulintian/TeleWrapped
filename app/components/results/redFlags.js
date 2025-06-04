@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 
-const FlipBokchoy = ({results}) => {
+const RedFlags = ({results, path}) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleClick = () => {
@@ -23,7 +23,7 @@ const FlipBokchoy = ({results}) => {
       >
         <div className="absolute h-[90%] aspect-[5/3] [backface-visibility:hidden]">
           <Image
-            src="/ingredients/greenFlag/bokchoyOnPlate.png"
+            src={path}
             alt="Front"
             fill
             className={`object-contain rounded-lg transition-all duration-500 ${
@@ -43,31 +43,31 @@ const FlipBokchoy = ({results}) => {
                 rounded-lg
                 h-[90%]
                 aspect-[5/3]
-                bg-green-custom
+                bg-red-custom
                 flex flex-col 
                 justify-center 
                 items-center 
                 text-black
                 shadow-lg
                 border-1
-              border-black
+                border-black
                 p-4
               "
               >
-                <span className="text-lg font-bold">Green Flags</span>
+                <span className="text-lg font-bold">Red Flags</span>
                 <div className="text-left text-xs lg:text-sm">
-                {results.users?.map((user, index) => (
-                  user.greenFlags.map((greenFlag, i) => (
-                    <div key={`${index}-${i}`} className={results.users.length <= 2 ? "pt-2" : ""}>
-                      <span className={results.users.length <= 2 ? "underline" : ""}>
-                        {user.username}: {greenFlag.flag}
-                      </span>
-                      {results.users.length <= 2 && (
-                        <p>{greenFlag.reasoning}</p>
-                      )}
-                    </div>
-                  ))
-                ))}
+                  {results.users?.map((user, index) => (
+                    user.redFlags.map((redFlag, i) => (
+                      <div key={`${index}-${i}`} className={results.users.length <= 2 ? "pt-2" : ""}>
+                        <span className={results.users.length <= 2 ? "underline" : ""}>
+                          {user.username}: {redFlag.flag}
+                        </span>
+                        {results.users.length <= 2 && (
+                          <p>{redFlag.reasoning}</p>
+                        )}
+                      </div>
+                    ))
+                  ))}
                 </div>
               </div>
             </div>
@@ -77,4 +77,5 @@ const FlipBokchoy = ({results}) => {
     </div>
   );
 };
-export default FlipBokchoy;
+
+export default RedFlags;

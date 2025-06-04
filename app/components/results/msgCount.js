@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 
-const FlipTomato = ({totalMessages}) => {
+const MsgCount = ({totalMessages, path}) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleClick = () => {
@@ -21,7 +21,7 @@ const FlipTomato = ({totalMessages}) => {
       }`}>
         <div className="absolute w-full h-full [backface-visibility:hidden]">
           <Image
-            src="/ingredients/numOfMessages/tomatoOnPlate.png"
+            src={path}
             alt="Front"
             fill
             className={`object-contain rounded-lg transition-all duration-500 ${
@@ -58,4 +58,4 @@ const FlipTomato = ({totalMessages}) => {
   );
 };
 
-export default FlipTomato;
+export default MsgCount;
