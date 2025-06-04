@@ -360,38 +360,73 @@ async function getChatMembers(client, chatId) {
  * @param {*} numOfMessages Number of Telegram chat messages to be retrieved for analysis
  * @returns List of latest messages and its respective information (id, data, content, etc)
  */
-async function getMessages(client, chatId, numOfMessages) {
+async function getMessages(client, chatId, chatType, numOfMessages) {
     try {
         const result = new Array();
 
-        const users = await getChatMembers(client, chatId);
+        if (chatType == "PeerUser") {
+            const users = await getChatMembers(client, chatId);
+            const entity = await client.getEntity(chatId);
 
-        for await (const messageJson of client.iterMessages(chatId, { limit: numOfMessages })) {
-            var {id, fromId, peerId, fwdFrom, replyTo, date, message, pinned, reactions} = messageJson;
+            for await (const messageJson of client.iterMessages(entity, { limit: 10 })) {
+                var {id, fromId, peerId, fwdFrom, replyTo, date, message, pinned, reactions} = messageJson;
 
-            if (fromId != null) {
-                fromId = users[String(fromId.userId.value)];
+                if (fromId != null) {
+                    fromId = users[String(fromId.userId.value)];
+                }
+
+                if (peerId != null) {
+                    peerId = users[String(peerId.userId.value)];
+                }
+
+                result.push({
+                    id: id,
+                    fromId: fromId,
+                    peerId: peerId,
+                    fwdFrom: fwdFrom,
+                    replyTo: replyTo,
+                    date: date,
+                    message: message,
+                    pinned: pinned,
+                    reactions: reactions,
+                })
+            } 
+        } else {
+            const entity = new Api.InputPeerChat({ chatId: chatId });
+            const history = await client.invoke(
+                new Api.messages.GetHistory({
+                    peer: entity,
+                    limit: 10,
+                })
+            );
+
+            const users = history.users;
+            const userDict = {}
+            for (const user of users) {
+                userDict[user.id] = user.username;
             }
 
-            if (peerId != null) {
-                peerId = users[String(peerId.userId.value)];
-            }
+            for (const messageJson of history.messages) {
 
-            result.push({
-                id: id,
-                fromId: fromId,
-                peerId: peerId,
-                fwdFrom: fwdFrom,
-                replyTo: replyTo,
-                date: date,
-                message: message,
-                pinned: pinned,
-                reactions: reactions,
-            })
-        } 
+                var {id, fromId, peerId, fwdFrom, replyTo, date, message, pinned, reactions} = messageJson;
+                
+                result.push({
+                    id: id,
+                    fromId: userDict[fromId.userId.value],
+                    peerId: peerId,
+                    fwdFrom: fwdFrom,
+                    replyTo: replyTo,
+                    date: date,
+                    message: message,
+                    pinned: pinned,
+                    reactions: reactions,
+                })
+            }
+        }
 
         return result;
     } catch (error) {
+        console.log(error)
         return [];
     }
 }
@@ -404,14 +439,16 @@ async function getMessages(client, chatId, numOfMessages) {
  * @param {*} numOfMessages Number of Telegram chat messages to be retrieved for analysis
  * @returns Analysis of chat messages
  */
-export async function getBulkMessages(session, chatId, numOfMessages) {
+export async function getBulkMessages(session, chatId, chatType, numOfMessages) {
     const client = createClient(session);
     await client.connect();
     client.floodSleepThreshold = 180;
 
+    console.log(chatType);
+
     try {
         
-        const history = await getMessages(client, chatId, numOfMessages);
+        const history = await getMessages(client, chatId, chatType, numOfMessages);
         
         if (history.length == 0) {
             throw new Error("Error with Telegram");

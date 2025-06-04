@@ -9,6 +9,7 @@ import BackButton from "../components/common/backButton";
 export default function Soupbase() {
   const searchParams = useSearchParams();
   const chatId = searchParams.get('chatId');
+  const chatType = searchParams.get('chatType');
   const session = sessionStorage.getItem("session");
 
   const router = useRouter();
@@ -36,6 +37,13 @@ export default function Soupbase() {
 
   const handleSoupClick = async (soupbase) => {
     router.push("/prep");
+    var processedChatType;
+
+    if (chatType == "chat") {
+      processedChatType = "PeerChat";
+    } else {
+      processedChatType = "PeerUser";
+    }
   
     try {
       const response = await fetch("/api/analyse", {
@@ -43,7 +51,8 @@ export default function Soupbase() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           sessionObj: session,
-          chatId,
+          chatId:chatId,
+          chatType: processedChatType,
           numOfMessages: parseInt(soupbase.messages),
         }),
       });

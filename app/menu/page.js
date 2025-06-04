@@ -46,12 +46,12 @@ export default function Menu() {
       <div className="flex flex-col h-[75%] md:flex-row gap-y-4 md:gap-x-2 overflow-y-auto">
         <div className="flex flex-col md:h-max gap-y-4 md:gap-y-2 md:w-1/2">
           {chats.slice(0,5).map((chat, index) => (
-             <Set key={index} chatName={getChatName(chat.info, chat.type)} chatId={chat.id} totalMessages= {chat.info.topMessageId} ingredients={ingredients[index]} />
+             <Set key={index} chatName={getChatName(chat.info, chat.type)} chatId={chat.id} chatType={chat.type} totalMessages={chat.info.topMessageId} ingredients={ingredients[index]} />
           ))}
         </div>
         <div className="flex flex-col md:h-max gap-y-4 md:gap-y-2 md:w-1/2">
           {chats.slice(5,10).map((chat, index) => (
-            <Set key={index} chatName={getChatName(chat.info, chat.type)} chatId={chat.id} totalMessages= {chat.info.topMessageId} ingredients={ingredients[index+5]}/>
+            <Set key={index} chatName={getChatName(chat.info, chat.type)} chatId={chat.id} chatType={chat.type} totalMessages={chat.info.topMessageId} ingredients={ingredients[index+5]}/>
           ))}
         </div>
       </div>

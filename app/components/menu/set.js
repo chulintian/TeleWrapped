@@ -4,13 +4,13 @@ import { useRouter } from "next/navigation";
 import { startTransition } from "react";
 import Image from "next/image";
 
-export default function Set({ chatName, chatId, totalMessages, ingredients }) {
+export default function Set({ chatName, chatId, chatType, totalMessages, ingredients }) {
   const router = useRouter();
 
-  const handleClick = (chatId) => {
+  const handleClick = (chatId, chatType) => {
     sessionStorage.setItem("totalMessages", JSON.stringify(totalMessages));
     startTransition(() => {
-      router.push(`/soupbase?chatId=${chatId}`);
+      router.push(`/soupbase?chatId=${chatId}&chatType=${chatType}`);
     });
   };
 
@@ -34,7 +34,7 @@ export default function Set({ chatName, chatId, totalMessages, ingredients }) {
       </div>
       <div
         className="rounded-full aspect-square bg-[#f8a78d] flex justify-center items-center place-self-center h-full p-3 cursor-pointer"
-        onClick={() => handleClick(chatId)}
+        onClick={() => handleClick(chatId, chatType)}
       >
         <Image
           src="/cart.png"
