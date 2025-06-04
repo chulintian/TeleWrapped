@@ -363,10 +363,19 @@ async function getChatMembers(client, chatId) {
 async function getMessages(client, chatId, chatType, numOfMessages) {
     try {
         const result = new Array();
+        var msgCount;
 
         if (chatType == "PeerUser") {
             const users = await getChatMembers(client, chatId);
             const entity = await client.getEntity(chatId);
+
+            const history = await client.invoke(
+                new Api.messages.GetHistory({
+                    peer: entity,
+                    limit: 10,
+                })
+            );
+            msgCount = history.count;
 
             for await (const messageJson of client.iterMessages(entity, { limit: numOfMessages })) {
                 var {id, fromId, peerId, fwdFrom, replyTo, date, message, pinned, reactions} = messageJson;
@@ -399,6 +408,7 @@ async function getMessages(client, chatId, chatType, numOfMessages) {
                     limit: numOfMessages,
                 })
             );
+            msgCount = history.count;
 
             const users = history.users;
             const userDict = {}
@@ -424,7 +434,7 @@ async function getMessages(client, chatId, chatType, numOfMessages) {
             }
         }
 
-        return result;
+        return [result, msgCount];
     } catch (error) {
         console.log(error)
         return [];
@@ -446,7 +456,7 @@ export async function getBulkMessages(session, chatId, chatType, numOfMessages) 
 
     try {
         
-        const history = await getMessages(client, chatId, chatType, numOfMessages);
+        const [history,msgCount] = await getMessages(client, chatId, chatType, numOfMessages);
         
         if (history.length == 0) {
             throw new Error("Error with Telegram");
@@ -464,6 +474,7 @@ export async function getBulkMessages(session, chatId, chatType, numOfMessages) 
             code: 200, 
             content: {
                 session: sessionString,
+                msgCount: msgCount,
                 analysis: analysis,
             }
         };
