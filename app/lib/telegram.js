@@ -368,7 +368,7 @@ async function getMessages(client, chatId, chatType, numOfMessages) {
             const users = await getChatMembers(client, chatId);
             const entity = await client.getEntity(chatId);
 
-            for await (const messageJson of client.iterMessages(entity, { limit: 10 })) {
+            for await (const messageJson of client.iterMessages(entity, { limit: numOfMessages })) {
                 var {id, fromId, peerId, fwdFrom, replyTo, date, message, pinned, reactions} = messageJson;
 
                 if (fromId != null) {
@@ -396,7 +396,7 @@ async function getMessages(client, chatId, chatType, numOfMessages) {
             const history = await client.invoke(
                 new Api.messages.GetHistory({
                     peer: entity,
-                    limit: 10,
+                    limit: numOfMessages,
                 })
             );
 
@@ -409,7 +409,7 @@ async function getMessages(client, chatId, chatType, numOfMessages) {
             for (const messageJson of history.messages) {
 
                 var {id, fromId, peerId, fwdFrom, replyTo, date, message, pinned, reactions} = messageJson;
-                
+
                 result.push({
                     id: id,
                     fromId: userDict[fromId.userId.value],
@@ -443,8 +443,6 @@ export async function getBulkMessages(session, chatId, chatType, numOfMessages) 
     const client = createClient(session);
     await client.connect();
     client.floodSleepThreshold = 180;
-
-    console.log(chatType);
 
     try {
         

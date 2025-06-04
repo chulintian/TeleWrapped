@@ -67,13 +67,13 @@ const systemPrompt = `
     Each section must contain exactly the specified number of words.
     Do not exceed or go below the word count.
     Use concise, playful language that fits the tone, but respect the limits strictly:
-
     - vibeCheck: Exactly 25 words
     - attachmentStyle.reasoning: Exactly 7 words
     - greenFlags.reasoning: Exactly 15 words
     - redFlags.reasoning: Exactly 15 words
-
     Any reasoning with more or fewer words will be considered invalid.
+
+    For chats with more than 2 users, list all users in the array of users. Make sure that all of the users have their respective 1 attachment style (style, reasoning), 1 green flags (flag, reasoning) and 1 red flags (flag, reasoning).
 `;
 
 const returnSchema = {
