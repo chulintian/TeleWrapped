@@ -18,6 +18,7 @@ export default function Results() {
   const [results, setResults] = useState({});
   const [totalMessages, setTotalMessages] = useState("");
   const [ingredients, setIngredients] = useState([]);
+  const [soupbase, setSoupbase] = useState([]);
   const [totalNumOfMsg, setTotalNumOfMsg] = useState();
   const captureRef = useRef(null);
 
@@ -51,6 +52,12 @@ export default function Results() {
     "noodle": "/ingredients/vibeCheck/noodleOnPlate.png"
   };
 
+  const soupbaseDict = {
+    "malaSoup": "/soupbases/malaSoup.png",
+    "mushroomSoup": "/soupbases/mushroomSoup.png",
+    "tomatoSoup": "/soupbases/tomatoSoup.png",
+  }
+
   useEffect(() => {
     try {
       const storedResults = JSON.parse(sessionStorage.getItem("results"));
@@ -70,6 +77,8 @@ export default function Results() {
     setTotalMessages(storedTotalMessages || "");
     const storedIngredients = JSON.parse(sessionStorage.getItem("ingredients"));
     setIngredients(storedIngredients || []);
+    const storedSoupbase = JSON.parse(sessionStorage.getItem("soupbase"));
+    setSoupbase(storedSoupbase || []);
   }, []);
 
   const handleClick = async () => {
@@ -124,46 +133,14 @@ export default function Results() {
           <div className="flex flex-col lg:flex-row w-full">
             <div className="flex flex-col w-full justify-center items-center lg:order-2 ">
               <div className="flex justify-center items-center h-80 w-full lg:h-96 relative">
-                <Image
-                  src="/hotpot/malaPot.png"
-                  alt="Image of hotpot"
-                  fill
-                  className="object-contain rounded-lg"
-                />
+              <Image
+                src={soupbaseDict[soupbase] || "soupbase/malaSoup.png"} 
+                alt={`Image of ${soupbase}`}
+                fill
+                className="object-contain rounded-lg"
+              />
               </div>
               <div className="flex justify-center items-center h-32 w-32 lg:w-56 lg:h-30 relative overflow-visible">
-                {/* <div className="absolute top-0 left-0 w-full h-full grid grid-rows-3 grid-cols-5 gap-px z-10">
-                  {Array.from({ length: 15 }).map((_, index) => {
-                    const col = (index % 5) + 1;
-                    const row = Math.floor(index / 5) + 1;
-
-                    const imageMap = {
-                      '1,2': '/path/to/image1.png',
-                      '2,3': '/path/to/image2.png',
-                      '3,1': '/path/to/image3.png',
-                      '3,2': '/path/to/image4.png',
-                      '4,3': '/path/to/image5.png',
-                      '5,2': '/path/to/image6.png',
-                    };
-
-                    const key = `${col},${row}`;
-                    const imgSrc = imageMap[key];
-
-                    return (
-                      <div key={index} className="relative border border-white/30">
-                        {imgSrc && (
-                          <Image
-                            src={imgSrc}
-                            alt={`Overlay image at ${col},${row}`}
-                            className="w-full h-full object-contain"
-                            fill
-                          />
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>  */}
-                
                 <Image
                   src="/hotpot/utensils.png"
                   alt="Image of utensils"
@@ -176,12 +153,12 @@ export default function Results() {
               <div className="flex flex-col lg:flex-row w-full justify-center items-center ">
                 <div className="flex justify-around items-center h-56 aspect-[1] lg:h-64 ">
                   {ingredientDict[ingredients[3]] ? (
-                    <Compatibility results={results.vibeCheck || ""} path={ingredientDict[ingredients[3]]} />
+                    <VibeCheck results={results.vibeCheck || ""} path={ingredientDict[ingredients[5]]} />
                   ) : null}
                 </div>
                 <div className="flex justify-around items-center h-40 aspect-[1] lg:h-40 ">
                   {ingredientDict[ingredients[4]] ? (
-                    <AttachmentStyle results={results.compatibility || ""} path={ingredientDict[ingredients[4]]} />
+                    <Compatibility results={results.compatibility || ""} path={ingredientDict[ingredients[3]]} />
                   ) : null}
                 </div>
               </div>
@@ -193,11 +170,11 @@ export default function Results() {
             </div>
             <div className="flex flex-col w-full justify-center items-center transform xl:-translate-x-[10%] 2xl:-translate-x-[23%] -translate-y-[15%] lg:translate-y-[0%] lg:order-3">
               <div className="flex flex-col lg:flex-row w-full justify-center items-center lg:order-2 ">
-                {/* <div className="flex justify-around items-center h-56 aspect-[1] lg:h-64">
+                <div className="flex justify-around items-center h-56 aspect-[1] lg:h-64">
                   {ingredientDict[ingredients[5]] ? (
-                    <VibeCheck results={results} path={ingredientDict[ingredients[5]]} />
+                    <AttachmentStyle results={results} path={ingredientDict[ingredients[4]]} />
                   ) : null}
-                </div> */}
+                </div>
                 <div className="flex justify-around items-center h-40 aspect-[1] lg:h-40">
                   {ingredientDict[ingredients[1]] ? (
                     <MsgCount totalMessages={totalNumOfMsg} path={ingredientDict[ingredients[1]]} />

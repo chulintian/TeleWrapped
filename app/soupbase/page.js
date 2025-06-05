@@ -36,6 +36,7 @@ export default function Soupbase() {
   ];
 
   const handleSoupClick = async (soupbase) => {
+    sessionStorage.setItem("soupbase", JSON.stringify(soupbase.image));
     router.push("/prep");
     var processedChatType;
 

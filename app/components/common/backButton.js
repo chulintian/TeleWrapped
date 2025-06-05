@@ -18,7 +18,7 @@ export default function BackButton ({
 
   return (   
     <div 
-      className="absolute top-7 left-7 rounded-full aspect-square w-10 h-10 border border-1-black flex items-center justify-center cursor-pointer" 
+      className="absolute top-10 lg:top-7 left-7 rounded-full aspect-square w-5 h-5 lg:w-10 lg:h-10 border border-1-black flex items-center justify-center cursor-pointer" 
       onClick={handleClick}
     >
       <IoMdArrowBack />
