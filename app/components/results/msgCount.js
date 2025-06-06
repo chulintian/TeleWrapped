@@ -1,13 +1,24 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
-const MsgCount = ({totalMessages, path}) => {
+const MsgCount = ({totalMessages, path, flipped, onFlip}) => {
   const [isFlipped, setIsFlipped] = useState(false);
+
+  useEffect(() => {
+    if (flipped) {
+      setIsFlipped(true);
+      const timer = setTimeout(() => {
+        onFlip?.();
+      }, 300); 
+      return () => clearTimeout(timer);
+    }
+  }, [flipped, onFlip]);
 
   const handleClick = () => {
     if (!isFlipped) {
       setIsFlipped(true);
+      onFlip();
     }
   };
 
@@ -47,7 +58,7 @@ const MsgCount = ({totalMessages, path}) => {
                 border-1
               border-black
               ">
-                <span className="text-lg font-bold text-center">Message <br /> Count</span>
+                <span className="font-bold text-center">Message <br /> Count</span>
                 <span className="text-2xl px-4 pt-1 text-center">{totalMessages}</span>
               </div>
             </div>

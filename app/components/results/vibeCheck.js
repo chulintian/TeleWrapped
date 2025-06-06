@@ -1,13 +1,24 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
-const VibeCheck = ({results, path}) => {
+const VibeCheck = ({results, path, flipped, onFlip}) => {
   const [isFlipped, setIsFlipped] = useState(false);
+
+  useEffect(() => {
+    if (flipped) {
+      setIsFlipped(true);
+      const timer = setTimeout(() => {
+        onFlip?.();
+      }, 300); 
+      return () => clearTimeout(timer);
+    }
+  }, [flipped, onFlip]);
 
   const handleClick = () => {
     if (!isFlipped) {
       setIsFlipped(true);
+      onFlip();
     }
   };
 
@@ -47,7 +58,7 @@ const VibeCheck = ({results, path}) => {
                 border-1
               border-black
               ">
-                <span className="text-lg font-bold">Vibe Check</span>
+                <span className="font-bold">Vibe Check</span>
                 <span className="text-xs lg:text-sm px-4 text-center">{results}</span>
               </div>
             </div>

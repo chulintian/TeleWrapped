@@ -32,8 +32,8 @@ export default function PrepVideo() {
         <Image
           src="/logo2.png"
           alt="logo"
-          width={200}
-          height={100}
+          width={400}
+          height={20}
           className="w-4/5 sm:w-1/2 md:w-1/3"
         />
       </div>

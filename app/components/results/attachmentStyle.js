@@ -1,13 +1,24 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
-const AttachmentStyle = ({results, path}) => {
+const AttachmentStyle = ({results, path, flipped, onFlip}) => {
   const [isFlipped, setIsFlipped] = useState(false);
+
+  useEffect(() => {
+    if (flipped) {
+      setIsFlipped(true);
+      const timer = setTimeout(() => {
+        onFlip?.();
+      }, 300); 
+      return () => clearTimeout(timer);
+    }
+  }, [flipped, onFlip]);
 
   const handleClick = () => {
     if (!isFlipped) {
       setIsFlipped(true);
+      onFlip();
     }
   };
 
@@ -47,8 +58,8 @@ const AttachmentStyle = ({results, path}) => {
                 border-1
               border-black
               ">
-                <span className="text-lg font-bold">Attachment Style</span>
-                <div className="text-center text-xs lg:text-sm">
+                <span className="font-bold">Attachment Style</span>
+                <div className="text-center text-xs lg:text-sm px-6">
                   {results.users?.map((user, index) => (
                     user.attachmentStyle.map((attachment, i) => (
                       <div key={`${index}-${i}`} className={results.users.length <= 2 ? "pt-2" : ""}>

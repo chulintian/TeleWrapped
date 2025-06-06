@@ -1,13 +1,24 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
-const RedFlags = ({results, path}) => {
+const RedFlags = ({results, path, flipped, onFlip}) => {
   const [isFlipped, setIsFlipped] = useState(false);
+
+  useEffect(() => {
+    if (flipped) {
+      setIsFlipped(true);
+      const timer = setTimeout(() => {
+        onFlip?.();
+      }, 300); 
+      return () => clearTimeout(timer);
+    }
+  }, [flipped, onFlip]);
 
   const handleClick = () => {
     if (!isFlipped) {
       setIsFlipped(true);
+      onFlip();
     }
   };
 
@@ -54,7 +65,7 @@ const RedFlags = ({results, path}) => {
                 p-4
               "
               >
-                <span className="text-lg font-bold">Red Flags</span>
+                <span className="font-bold">Red Flags</span>
                 <div className="text-left text-xs lg:text-sm">
                   {results.users?.map((user, index) => (
                     user.redFlags.map((redFlag, i) => (

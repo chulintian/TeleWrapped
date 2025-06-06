@@ -1,13 +1,24 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
-const Compatibility = ({results, path}) => {
+const Compatibility = ({results, path, flipped, onFlip}) => {
   const [isFlipped, setIsFlipped] = useState(false);
+
+  useEffect(() => {
+    if (flipped) {
+      setIsFlipped(true);
+      const timer = setTimeout(() => {
+        onFlip?.();
+      }, 300); 
+      return () => clearTimeout(timer);
+    }
+  }, [flipped, onFlip]);
 
   const handleClick = () => {
     if (!isFlipped) {
       setIsFlipped(true);
+      onFlip();
     }
   };
 
@@ -47,7 +58,7 @@ const Compatibility = ({results, path}) => {
                 border-1
                 border-black
               ">
-                <span className="text-lg font-bold">Compatibility</span>
+                <span className="font-bold">Compatibility</span>
                 <span className="text-3xl px-4 pt-1 text-center">{results}</span>
               </div>
             </div>
